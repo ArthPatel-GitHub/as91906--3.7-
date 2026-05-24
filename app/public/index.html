@@ -1,43 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rathkeale College Song Portal</title>
+  <style>
+    body { background-color: #0b1329; color: #f8fafc; font-family: system-ui, sans-serif; padding: 32px; margin: 0; }
+    header { border-bottom: 3px solid #16a34a; padding-bottom: 20px; mb: 32px; }
+    h1 { color: #dc2626; margin: 0; font-size: 2.25rem; font-weight: 800; }
+    .widget { background-color: #1c2541; padding: 20px; border-radius: 12px; margin-bottom: 32px; border-left: 6px solid #16a34a; }
+    .search-bar { width: 100%; padding: 16px; border-radius: 8px; border: 2px solid #3a506b; background-color: #1c2541; color: #ffffff; font-size: 1.1rem; box-sizing: border-box; margin-bottom: 32px; }
+    .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .card { background-color: #1c2541; padding: 20px; border-radius: 8px; border: 1px solid #3a506b; margin-bottom: 16px; }
+    .btn { background-color: #dc2626; color: #ffffff; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.95rem; }
+    .player-box { background-color: #1c2541; padding: 24px; border-radius: 12px; border: 2px solid #dc2626; }
+    .lyrics-display { background-color: #0b1329; padding: 20px; border-radius: 8px; border: 1px solid #3a506b; margin-bottom: 20px; white-space: pre-wrap; font-style: italic; color: #e2e8f0; }
+  </style>
+</head>
+<body>
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  <header>
+    <h1>Rathkeale College</h1>
+    <p style="margin: 4px 0 0 0; color: #94a3b8;">Digital Song & Hymn Portal</p>
+  </header>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  <div class="widget">
+    <h3 style="color: #3b82f6; font-size: 0.8rem; font-weight: 700; margin: 0 0 6px 0; text-transform: uppercase;">TODAY'S SONG REQUIREMENT</h3>
+    <p id="schedule-text" style="fontSize: 1.2rem; fontWeight: 600; margin: 0;">Loading schedule...</p>
+  </div>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+  <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search for a hymn, lyric phrase, or school song..." />
+
+  <div class="main-layout">
+    
+    <div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #cbd5e1;">Song Catalogue</h2>
+      <div id="songs-container"></div>
+    </div>
+
+    <div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #cbd5e1;">Media Player</h2>
+      <div id="player-container">
+        <div style="color: #64748b; text-align: center; padding: 40px; background: #1c2541; border-radius: 12px; border: 1px solid #3a506b;">
+          Select a hymn from the catalogue to stream its live playback track.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../src/App.js"></script>
+</body>
 </html>
