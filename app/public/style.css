@@ -181,3 +181,29 @@ audio {
   width: 100%; 
   margin-top: 8px; 
 }
+/* ITERATIVE CODE SEPARATION STYLES */
+.text-muted-fallback {
+  color: var(--text-muted);
+}
+.status-loading {
+  color: var(--accent-blue);
+  text-align: center;
+  padding: 40px;
+  font-weight: 700;
+}
+.track-heading {
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+.audio-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+.error-fallback-box {
+  color: var(--brand-red);
+  padding: 20px;
+  border: 1px dashed var(--brand-red);
+  border-radius: 8px;
+  font-weight: bold;
+}
