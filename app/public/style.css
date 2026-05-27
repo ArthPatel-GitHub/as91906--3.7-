@@ -1,0 +1,183 @@
+:root {
+  --bg-main: #060b13;
+  --bg-card: #0d1625;
+  --bg-input: #132237;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --brand-green: #10b981;
+  --brand-red: #ef4444;
+  --accent-blue: #3b82f6;
+}
+
+body { 
+  background-color: var(--bg-main); 
+  color: var(--text-main); 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  padding: 40px; 
+  margin: 0; 
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* PREMIUM APP BAR HEADER */
+header { 
+  border-bottom: 2px solid var(--brand-green); 
+  padding-bottom: 24px; 
+  margin-bottom: 32px; 
+}
+h1 { 
+  color: var(--brand-red); 
+  margin: 0; 
+  font-size: 2.5rem; 
+  font-weight: 800; 
+  letter-spacing: -0.03em;
+}
+header p { 
+  margin: 6px 0 0 0; 
+  color: var(--text-muted); 
+  font-size: 1.1rem; 
+}
+
+/* SCHEDULE ACCENT WIDGET */
+.widget { 
+  background-color: var(--bg-card); 
+  padding: 24px; 
+  border-radius: 12px; 
+  margin-bottom: 32px; 
+  border-left: 6px solid var(--brand-green);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.widget-title { 
+  color: var(--accent-blue); 
+  font-size: 0.85rem; 
+  font-weight: 700; 
+  margin: 0 0 8px 0; 
+  text-transform: uppercase; 
+  letter-spacing: 0.08em;
+}
+.widget-text { 
+  font-size: 1.25rem; 
+  font-weight: 600; 
+  margin: 0; 
+  color: #ffffff; 
+}
+
+/* INTERACTIVE SEARCH INPUT */
+.search-bar { 
+  width: 100%; 
+  padding: 18px 24px; 
+  border-radius: 10px; 
+  border: 2px solid #1e293b; 
+  background-color: var(--bg-input); 
+  color: #ffffff; 
+  font-size: 1.1rem; 
+  box-sizing: border-box; 
+  margin-bottom: 40px; 
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+.search-bar:focus {
+  border-color: var(--brand-green);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+
+/* TWO-COLUMN LAYOUT SYSTEM */
+.main-layout { 
+  display: grid; 
+  grid-template-columns: 1.11fr 0.89fr; 
+  gap: 40px; 
+}
+.column-title { 
+  font-size: 1.6rem; 
+  margin-top: 0; 
+  margin-bottom: 20px; 
+  color: #cbd5e1; 
+  font-weight: 700; 
+}
+
+/* SONG ITEM CARDS */
+.card { 
+  background-color: var(--bg-card); 
+  padding: 24px; 
+  border-radius: 12px; 
+  border: 1px solid #1e293b; 
+  margin-bottom: 20px; 
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: #334155;
+}
+.card h3 { 
+  color: var(--brand-green); 
+  margin: 0 0 10px 0; 
+  font-size: 1.4rem; 
+  font-weight: 700; 
+}
+.card p { 
+  font-size: 0.95rem; 
+  color: var(--text-muted); 
+  margin: 0 0 18px 0; 
+}
+
+/* ACTION BUTTONS */
+.btn { 
+  background-color: var(--brand-red); 
+  color: #ffffff; 
+  border: none; 
+  padding: 12px 24px; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  font-weight: 700; 
+  font-size: 0.95rem; 
+  transition: background-color 0.2s ease;
+}
+.btn:hover { 
+  background-color: #dc2626; 
+}
+
+/* MEDIA CONTAINER INTERFACE */
+.player-box { 
+  background-color: var(--bg-card); 
+  padding: 32px; 
+  border-radius: 16px; 
+  border: 2px solid var(--brand-red); 
+  position: sticky;
+  top: 40px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+.player-source { 
+  font-size: 0.8rem; 
+  color: var(--brand-green); 
+  margin: 0 0 24px 0; 
+  font-weight: 700; 
+  letter-spacing: 0.05em; 
+}
+.lyrics-display { 
+  background-color: var(--bg-main); 
+  padding: 24px; 
+  border-radius: 10px; 
+  border: 1px solid #1e293b; 
+  margin-bottom: 24px; 
+  white-space: pre-wrap; 
+  font-style: italic; 
+  color: #e2e8f0; 
+  font-size: 1.15rem;
+  max-height: 350px;
+  overflow-y: auto;
+}
+.audio-wrapper { 
+  background: #132237; 
+  padding: 16px; 
+  border-radius: 10px; 
+}
+audio { 
+  width: 100%; 
+  margin-top: 8px; 
+}

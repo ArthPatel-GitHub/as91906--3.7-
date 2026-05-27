@@ -2,15 +2,41 @@
   {
     "id": 1,
     "title": "School Hymn (Lord of our life)",
-    "lyrics": "Lord of our life, and God of our salvation, star of our night, and hope of every nation...",
-    "history": "The traditional foundation hymn sung by all Rathkeale students during formal occasions.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    "lyrics": "Lord of our life, and God of our salvation, star of our night, and hope of every nation...\nLord, Thou canst help when earthly armour faileth;\nLord, Thou canst save when deadly sin assaileth;\nLord, o'er Thy Church nor death nor hell prevaileth;\nGrant us Thy peace, Lord.",
+    "history": "The traditional foundation hymn sung by all Rathkeale students during formal assemblies and chapel services.",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "category_id": 1
   },
   {
     "id": 2,
     "title": "Jerusalem",
-    "lyrics": "And did those feet in ancient time, walk upon England's mountains green? And was the holy Lamb of God...",
-    "history": "A powerful school anthem traditionally sung with immense pride during Friday singing.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+    "lyrics": "And did those feet in ancient time,\nWalk upon England's mountains green?\nAnd was the holy Lamb of God\nOn England's pleasant pastures seen?\n\nBring me my bow of burning gold!\nBring me my arrows of desire!\nBring me my spear! O clouds unfold!\nBring me my chariot of fire!",
+    "history": "A powerful anthem traditionally sung with immense pride and energy during Friday house singing sessions.",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "category_id": 2
+  },
+  {
+    "id": 3,
+    "title": "Rathkeale School Song",
+    "lyrics": "To the hills we lift our eyes,\nWhere the golden sunbeams rise.\nStanding proud and standing true,\nWe pledge our hearts, our strength to you.\nThrough the years our voices ring,\nOf loyalty and truth we sing.",
+    "history": "Composed to celebrate the unique environmental surroundings, values, and strong community spirit of the college.",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+    "category_id": 2
+  },
+  {
+    "id": 4,
+    "title": "Abide With Me",
+    "lyrics": "Abide with me; fast falls the eventide;\nThe darkness deepens; Lord, with me abide.\nWhen other helpers fail and comforts flee,\nHelp of the helpless, oh, abide with me.",
+    "history": "A deeply respected hymn utilized during traditional evening chapel services and solemn school events.",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+    "category_id": 1
+  },
+  {
+    "id": 5,
+    "title": "Guide Me, O Thou Great Redeemer",
+    "lyrics": "Guide me, O Thou great Redeemer,\nPilgrim through this barren land;\nI am weak, but Thou art mighty;\nHold me with Thy powerful hand;\nBread of heaven, Bread of heaven,\nFeed me till I want no more.",
+    "history": "A classic, soaring hymn often selected for major school calendar operations and public community services.",
+    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+    "category_id": 1
   }
 ]
