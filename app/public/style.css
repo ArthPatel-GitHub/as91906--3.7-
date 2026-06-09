@@ -2,13 +2,14 @@
    1. SYSTEM DESIGN VARIABLES & RESETS
    ========================================== */
 :root {
+  /* System Global Color Palettes & UI Token Constants */
   --bg-main: #030712;
   --bg-card: rgba(17, 24, 39, 0.7);
   --bg-input: #1f2937;
   --text-main: #f9fafb;
   --text-muted: #9ca3af;
-  --brand-green: #10b981;
-  --brand-red: #dc2626;
+  --brand-green: #10b981; /* Rathkeale Primary Color Branding Token */
+  --brand-red: #dc2626;   /* Rathkeale Secondary Color Branding Token */
   --accent-blue: #6366f1;
   --glass-border: rgba(255, 255, 255, 0.05);
   --neon-glow: rgba(16, 185, 129, 0.15);
@@ -23,7 +24,7 @@ body {
   padding: 50px 20px; 
   margin: 0; 
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased; /* Advanced hardware font face optimization */
 }
 
 .container {
@@ -48,6 +49,7 @@ h1 {
   font-weight: 900; 
   letter-spacing: -0.05em;
   text-transform: uppercase;
+  /* Premium masked gradient background clipping technique */
   background: linear-gradient(135deg, #ffffff 30%, var(--brand-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -66,6 +68,7 @@ header p {
    3. CALENDAR INFRASTRUCTURE WIDGET
    ========================================== */
 .widget { 
+  /* High-end glassmorphism implementation utilizing background filters and blurred backdrops */
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.05));
   backdrop-filter: blur(12px);
   padding: 20px 28px; 
@@ -107,6 +110,7 @@ header p {
   box-sizing: border-box; 
   margin-bottom: 45px; 
   outline: none;
+  /* Animate focusing properties smoothly across 300ms acceleration curves */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
 }
@@ -114,6 +118,7 @@ header p {
 .search-bar:focus {
   border-color: var(--brand-green);
   background-color: rgba(31, 41, 55, 0.9);
+  /* Inject a prominent colored neon bounding ring highlight on focus */
   box-shadow: 0 0 25px var(--neon-glow), inset 0 2px 4px rgba(0,0,0,0.4);
 }
 
@@ -122,7 +127,7 @@ header p {
    ========================================== */
 .main-layout { 
   display: grid; 
-  grid-template-columns: 1.15fr 0.85fr; 
+  grid-template-columns: 1.15fr 0.85fr; /* Standard structural asymmetrical columns distribution layout */
   gap: 45px; 
 }
 
@@ -150,6 +155,7 @@ header p {
 }
 
 .card:hover {
+  /* Elegant physical translation tracking layout shift upward on pointer intersection */
   transform: translateY(-4px) scale(1.01);
   border-color: rgba(16, 185, 129, 0.3);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.05);
@@ -195,7 +201,7 @@ header p {
 }
 
 .btn:active {
-  transform: translateY(1px);
+  transform: translateY(1px); /* Tactile interface physics indentation feedback mapping */
 }
 
 /* ==========================================
@@ -205,18 +211,17 @@ header p {
   background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
   padding: 36px; 
   border-radius: 24px; 
-  border: 1px solid rgba(220, 38, 38, 0.2); 
-  position: sticky;
+  border: 1px solid rgba(16, 185, 129, 0.3); 
+  position: sticky; /* Sticky interface anchoring: tracks viewport boundaries during catalog scroll */
   top: 40px;
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+  animation: livePulse 3s infinite ease-in-out; /* Continuous system execution pulse cue animation */
 }
 
-.player-source { 
-  font-size: 0.75rem; 
-  color: var(--brand-green); 
-  margin: 0 0 20px 0; 
-  font-weight: 900; 
-  letter-spacing: 0.12em; 
+@keyframes livePulse {
+  0% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0px rgba(16, 185, 129, 0); }
+  50% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 20px rgba(16, 185, 129, 0.15); }
+  100% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0px rgba(16, 185, 129, 0); }
 }
 
 .lyrics-display { 
@@ -225,26 +230,28 @@ header p {
   border-radius: 14px; 
   border: 1px solid var(--glass-border); 
   margin-bottom: 28px; 
-  white-space: pre-wrap; 
+  white-space: pre-wrap; /* Forces preservation of newline array text breaks for verse tracking */
   font-style: italic; 
   color: #f3f4f6; 
   font-size: 1.15rem;
   max-height: 380px;
-  overflow-y: auto;
+  overflow-y: auto; /* Bounds extreme lyric data block maps into local scroll spaces */
   line-height: 1.8;
   box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);
 }
 
-/* Custom scrollbar layout for lyrics container */
+/* High-End Custom Webkit-Scrollbar Mechanics */
 .lyrics-display::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 .lyrics-display::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(3, 7, 18, 0.5);
+  border-radius: 10px;
 }
 .lyrics-display::-webkit-scrollbar-thumb {
-  background: var(--glass-border);
+  background: linear-gradient(180deg, var(--brand-green) 0%, var(--accent-blue) 100%);
   border-radius: 10px;
+  border: 2px solid rgba(3, 7, 18, 0.5);
 }
 
 .audio-wrapper { 
@@ -297,35 +304,4 @@ audio {
   border-radius: 14px;
   font-weight: 600;
   background-color: rgba(220, 38, 38, 0.05);
-}
-/* FINAL SPRINT IMPROVEMENT: PULSING GLOW FOR ACTIVE MEDIA ENGINE */
-.player-box { 
-  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
-  padding: 36px; 
-  border-radius: 24px; 
-  border: 1px solid rgba(16, 185, 129, 0.3); /* Changed to green for live status */
-  position: sticky;
-  top: 40px;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
-  animation: livePulse 3s infinite ease-in-out; /* Premium dynamic visual feedback */
-}
-
-@keyframes livePulse {
-  0% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0px rgba(16, 185, 129, 0); }
-  50% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 20px rgba(16, 185, 129, 0.15); }
-  100% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0px rgba(16, 185, 129, 0); }
-}
-
-/* HIGH-END CUSTOM LYRIC SCROLLBAR GRAPHICS */
-.lyrics-display::-webkit-scrollbar {
-  width: 8px;
-}
-.lyrics-display::-webkit-scrollbar-track {
-  background: rgba(3, 7, 18, 0.5);
-  border-radius: 10px;
-}
-.lyrics-display::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--brand-green) 0%, var(--accent-blue) 100%);
-  border-radius: 10px;
-  border: 2px solid rgba(3, 7, 18, 0.5);
 }
