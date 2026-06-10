@@ -9,12 +9,9 @@ let notificationEngine;
 let playbackHistoryStack = [];
 const songCacheMap = new Map();
 
-/**
- * Global State Engine Trackers
- * Tracks active media streams and hardware execution play states natively.
- */
 let currentAudioElement = null;
 let currentActiveSongId = null;
+let progressUpdateInterval = null; // High-Performance hardware tracking pointer for timeline sync
 
 // ==========================================
 // 2. LIFECYCLE INITIALIZATION PIPELINE
@@ -135,16 +132,15 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   const activeSong = songCacheMap.get(songId);
   if (!activeSong) return;
 
-  // Track State Synchronization
   currentActiveSongId = songId;
 
-  // Safeguard: Stop any existing running audio instance before mounting a new player stream
+  // Clear tracking operations from any previously running media components
   if (currentAudioElement) {
     currentAudioElement.pause();
+    clearInterval(progressUpdateInterval);
     currentAudioElement = null;
   }
 
-  // Push Operation: Record traversal trace array boundaries
   if (shouldPushToHistory) {
     const topOfStack = playbackHistoryStack[playbackHistoryStack.length - 1];
     if (topOfStack !== songId) {
@@ -158,7 +154,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     notificationEngine.success(`Streaming: ${activeSong.title}`);
   }
 
-  // Instantiate Hidden Audio Core Node Engine
   currentAudioElement = new Audio(activeSong.audioUrl);
   currentAudioElement.autoplay = true;
 
@@ -178,23 +173,25 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   lyricsDisplay.textContent = activeSong.lyrics;
 
   // ==========================================
-  // EXCELLENCE FEATURE: CUSTOM CONTROL DASHBOARD BUILD
+  // CUSTOM CONTROL DASHBOARD
   // ==========================================
   const controlDashboard = document.createElement('div');
-  controlDashboard.style.display = 'flex';
-  controlDashboard.style.gap = '10px';
-  controlDashboard.style.justifyContent = 'center';
-  controlDashboard.style.margin = '20px 0';
-  controlDashboard.style.padding = '15px';
   controlDashboard.style.background = '#0f172a';
   controlDashboard.style.borderRadius = '12px';
   controlDashboard.style.border = '1px solid #334155';
+  controlDashboard.style.padding = '20px';
+  controlDashboard.style.margin = '20px 0';
 
-  // 1. BUTTON: Previous Song (LIFO Stack Traversal)
+  // Layout Grid Block 1: Audio Core Buttons
+  const buttonRow = document.createElement('div');
+  buttonRow.style.display = 'flex';
+  buttonRow.style.gap = '10px';
+  buttonRow.style.justifyContent = 'center';
+  buttonRow.style.marginBottom = '20px';
+
   const prevButton = document.createElement('button');
   prevButton.className = 'btn';
   prevButton.innerHTML = '⏮️ Previous';
-  // Disable visually if there's nowhere to go back to in our history array stack
   if (playbackHistoryStack.length <= 1) {
     prevButton.style.opacity = '0.4';
     prevButton.style.cursor = 'not-allowed';
@@ -202,12 +199,10 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     prevButton.addEventListener('click', handleNavigationBackwards);
   }
 
-  // 2. BUTTON: Play / Pause Toggle Engine
   const playPauseButton = document.createElement('button');
   playPauseButton.className = 'btn';
   playPauseButton.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
   playPauseButton.innerHTML = '⏸️ Pause';
-  
   playPauseButton.addEventListener('click', () => {
     if (currentAudioElement.paused) {
       currentAudioElement.play();
@@ -220,18 +215,73 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     }
   });
 
-  // 3. BUTTON: Skip Forward (Linear Database Incrementor)
   const forwardButton = document.createElement('button');
   forwardButton.className = 'btn';
   forwardButton.innerHTML = 'Next ⏭️';
   forwardButton.addEventListener('click', handleNavigationForward);
 
-  // Append control elements cleanly to dashboard viewport
-  controlDashboard.appendChild(prevButton);
-  controlDashboard.appendChild(playPauseButton);
-  controlDashboard.appendChild(forwardButton);
+  // EXCELLENCE CAPABILITY ADDITION: Download Module Link
+  const downloadButton = document.createElement('a');
+  downloadButton.className = 'btn';
+  downloadButton.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'; // Amber Accent Layout Theme
+  downloadButton.style.textDecoration = 'none';
+  downloadButton.style.display = 'inline-flex';
+  downloadButton.style.alignItems = 'center';
+  downloadButton.style.justifyContent = 'center';
+  downloadButton.href = activeSong.audioUrl;
+  downloadButton.download = `${activeSong.title.replace(/\s+/g, '_')}_Practice_Track.mp3`;
+  downloadButton.innerHTML = '📥 Download';
+  downloadButton.addEventListener('click', () => {
+    if (notificationEngine) notificationEngine.success('Initializing local hardware download container...');
+  });
 
-  // Assemble full interface cards
+  buttonRow.appendChild(prevButton);
+  buttonRow.appendChild(playPauseButton);
+  buttonRow.appendChild(forwardButton);
+  buttonRow.appendChild(downloadButton);
+
+  // Layout Grid Block 2: PLAYBACK TIMELINE WORKSPACE (Excellence State Controller)
+  const timelineContainer = document.createElement('div');
+  timelineContainer.style.display = 'flex';
+  timelineContainer.style.alignItems = 'center';
+  timelineContainer.style.gap = '12px';
+
+  const currentTimeText = document.createElement('span');
+  currentTimeText.style.fontSize = '0.8rem';
+  currentTimeText.style.color = '#94a3b8';
+  currentTimeText.style.fontFamily = 'monospace';
+  currentTimeText.textContent = '0:00';
+
+  const timelineSlider = document.createElement('input');
+  timelineSlider.type = 'range';
+  timelineSlider.min = '0';
+  timelineSlider.max = '100';
+  timelineSlider.value = '0';
+  timelineSlider.style.flex = '1';
+  timelineSlider.style.cursor = 'pointer';
+  timelineSlider.style.accentColor = 'var(--accent-blue)';
+
+  const totalTimeText = document.createElement('span');
+  totalTimeText.style.fontSize = '0.8rem';
+  totalTimeText.style.color = '#94a3b8';
+  totalTimeText.style.fontFamily = 'monospace';
+  totalTimeText.textContent = '0:00';
+
+  // Interactivity Hook: Let the student scrub through the progress bar to alter track placement
+  timelineSlider.addEventListener('input', () => {
+    if (!currentAudioElement.duration) return;
+    const seekTargetTime = (timelineSlider.value / 100) * currentAudioElement.duration;
+    currentAudioElement.currentTime = seekTargetTime;
+  });
+
+  timelineContainer.appendChild(currentTimeText);
+  timelineContainer.appendChild(timelineSlider);
+  timelineContainer.appendChild(totalTimeText);
+
+  // Append elements to the primary layout structure
+  controlDashboard.appendChild(buttonRow);
+  controlDashboard.appendChild(timelineContainer);
+
   playerBox.appendChild(sourceIndicator);
   playerBox.appendChild(trackTitle);
   playerBox.appendChild(controlDashboard);
@@ -239,14 +289,33 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 
   playerContainer.appendChild(playerBox);
 
-  // Automation Link: When a hymn ends completely, auto-skip forward to the next index row item automatically!
-  currentAudioElement.addEventListener('ended', handleNavigationForward);
+  // State Engine Automation: Sync progress ticks accurately using high-performance clock intervals
+  progressUpdateInterval = setInterval(() => {
+    if (!currentAudioElement || !currentAudioElement.duration) return;
+    
+    // Math Formula Implementation: Calculate percentage ratio of audio completion boundaries
+    const completePercentage = (currentAudioElement.currentTime / currentAudioElement.duration) * 100;
+    timelineSlider.value = completePercentage;
+
+    // String manipulation formatting helper rules to parse seconds to minutes:seconds configurations
+    const currentMin = Math.floor(currentAudioElement.currentTime / 60);
+    const currentSec = Math.floor(currentAudioElement.currentTime % 60).toString().padStart(2, '0');
+    currentTimeText.textContent = `${currentMin}:${currentSec}`;
+
+    const totalMin = Math.floor(currentAudioElement.duration / 60);
+    const totalSec = Math.floor(currentAudioElement.duration % 60).toString().padStart(2, '0');
+    totalTimeText.textContent = `${totalMin}:${totalSec}`;
+  }, 250);
+
+  currentAudioElement.addEventListener('ended', () => {
+    clearInterval(progressUpdateInterval);
+    handleNavigationForward();
+  });
 }
 
 // ==========================================
 // 7. COMPLEX DATA STRUCTURE POINTER LOGIC
 // ==========================================
-
 function handleNavigationBackwards() {
   if (playbackHistoryStack.length <= 1) {
     if (notificationEngine) {
@@ -255,34 +324,21 @@ function handleNavigationBackwards() {
     return; 
   }
 
-  // Pop out the current active node context track item layer completely
   playbackHistoryStack.pop(); 
   const targetPreviousSongId = playbackHistoryStack[playbackHistoryStack.length - 1];
-
-  // Reload the media streams backwards without adding duplicates onto the history track stack
   handleStreamSong(targetPreviousSongId, false);
 }
 
-/**
- * Excellence Sequence Controller: Forward Index Nav Engine
- * Evaluates current array offsets, handles edge boundary rollover exceptions,
- * and increments pointers to compute adjacent song tracks instantly.
- */
 function handleNavigationForward() {
   if (songsDatabase.length === 0) return;
 
-  // Locate our index pointer rank location inside the database array structure
   const currentDatabaseIndex = songsDatabase.findIndex(song => song.id === currentActiveSongId);
-
-  // Boundary Condition Check: If we are on the very last song row, loop back around to index 0 smoothly
   let nextDatabaseIndex = currentDatabaseIndex + 1;
   if (nextDatabaseIndex >= songsDatabase.length) {
     nextDatabaseIndex = 0; 
   }
 
   const nextSongTarget = songsDatabase[nextDatabaseIndex];
-  
-  // Fire execution pipeline
   handleStreamSong(nextSongTarget.id, true);
 }
 
