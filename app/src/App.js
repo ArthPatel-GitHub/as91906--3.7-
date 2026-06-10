@@ -1,8 +1,8 @@
+/* global Notyf */
+
 // ==========================================
 // 1. GLOBAL CORE ENVIRONMENT VARIABLES
 // ==========================================
-
-/* global Notyf */
 
 /**
  * Global persistent dataset variable.
@@ -15,6 +15,13 @@ let songsDatabase = [];
  * Declares a global pointer to house our initialized non-core notification pipeline handler.
  */
 let notificationEngine;
+
+/**
+ * Complex Data Structure: Linear Execution Stack (LIFO - Last In, First Out)
+ * Maintains a runtime trace array of historically loaded song identifiers.
+ * This structure isolates playback data boundaries to allow step-back traversal.
+ */
+let playbackHistoryStack = [];
 
 // ==========================================
 // 2. LIFECYCLE INITIALIZATION PIPELINE
@@ -108,7 +115,9 @@ function renderSongCatalogue(songsArray) {
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
     loadButton.textContent = 'Load Media Stream';
-    loadButton.addEventListener('click', () => handleStreamSong(song.id));
+    
+    // Pass 'true' parameter to explicitly state this selection should push onto the stack tracking array
+    loadButton.addEventListener('click', () => handleStreamSong(song.id, true));
 
     cardElement.appendChild(cardTitle);
     cardElement.appendChild(cardHistory);
@@ -140,12 +149,29 @@ function handleSearchFiltering(event) {
 // ==========================================
 // 6. PIPELINE INTERACTION: Multimedia Stream Engine
 // ==========================================
-function handleStreamSong(songId) {
+
+/**
+ * Dynamic Media Station compilation engine.
+ * Maps indices, instantiates players, and handles custom stack trace histories.
+ * @param {number} songId - Relational identifier unique targeting attribute to locate tracking structures.
+ * @param {boolean} shouldPushToHistory - Conditional flag stating whether to append the active ID to the stack.
+ */
+function handleStreamSong(songId, shouldPushToHistory = true) {
   const playerContainer = document.getElementById('player-container');
   if (!playerContainer) return;
 
   const activeSong = songsDatabase.find(song => song.id === songId);
   if (!activeSong) return;
+
+  // Complex Data Structure Push Operation: Append current song layout state to historical data records boundary
+  // Only push if the item was loaded fresh from the catalog, not when popping backwards via the back toggle
+  if (shouldPushToHistory) {
+    // Structural Guard: Ensure we don't duplicate the same song consecutively on the stack frame pointers
+    const topOfStack = playbackHistoryStack[playbackHistoryStack.length - 1];
+    if (topOfStack !== songId) {
+      playbackHistoryStack.push(songId); 
+    }
+  }
 
   playerContainer.innerHTML = '';
   
@@ -168,6 +194,22 @@ function handleStreamSong(songId) {
     const sourceIndicator = document.createElement('div');
     sourceIndicator.className = 'player-source';
     sourceIndicator.textContent = '📡 LIVE MEDIA RELEASING VIA SECURE DATABASE LINK';
+
+    // Complex Data Structure UI Controller Integration: Construct custom back navigation actions
+    // Only display this element if the stack data allocation block contains more than 1 past trace record
+    if (playbackHistoryStack.length > 1) {
+      const backButton = document.createElement('button');
+      backButton.className = 'btn';
+      backButton.style.marginBottom = '15px';
+      backButton.style.padding = '8px 16px';
+      backButton.style.fontSize = '0.85rem';
+      backButton.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
+      backButton.textContent = '🔙 Go Back to Previous Song';
+      
+      // Bind click trigger directly to our standalone stack evaluation router
+      backButton.addEventListener('click', handleNavigationBackwards);
+      playerBox.appendChild(backButton);
+    }
 
     const trackTitle = document.createElement('h2');
     trackTitle.className = 'track-heading';
@@ -202,7 +244,36 @@ function handleStreamSong(songId) {
 }
 
 // ==========================================
-// 7. SYSTEM EXCEPTION RECOVERY
+// 7. COMPLEX DATA STRUCTURE POINTER LOGIC
+// ==========================================
+
+/**
+ * Stack Pop Functional Controller Module.
+ * Triggered exclusively by user back-navigation interface nodes.
+ * Pops the current track record frame completely out of structural memory boundaries
+ * to expose and re-initialize the preceding data row block.
+ */
+function handleNavigationBackwards() {
+  // Boundary Condition Safety Check: Validate if structural stack limits contain items to pop backward to
+  if (playbackHistoryStack.length <= 1) {
+    if (notificationEngine) {
+      notificationEngine.error('Stack Underflow Boundary: No further history tracked.');
+    }
+    return; 
+  }
+
+  // Complex Data Structure Pop Operation: Remove current active song record array tracking index from memory top layer
+  playbackHistoryStack.pop(); 
+
+  // Read the new top element vector left on top of the trace array stack tree workspace
+  const targetPreviousSongId = playbackHistoryStack[playbackHistoryStack.length - 1];
+
+  // Reload the media streams programmatically using the target index reference pointer
+  handleStreamSong(targetPreviousSongId, false);
+}
+
+// ==========================================
+// 8. SYSTEM EXCEPTION RECOVERY
 // ==========================================
 function showFallbackError() {
   const container = document.getElementById('songs-container');
