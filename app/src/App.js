@@ -4,36 +4,28 @@
 // 1. GLOBAL CORE ENVIRONMENT VARIABLES
 // ==========================================
 
-/**
- * Global persistent dataset variable.
- * Holds the unmutated song objects parsed from database.json.
- */
 let songsDatabase = []; 
-
-/**
- * Third-Party Library Module Instance.
- * Declares a global pointer to house our initialized non-core notification pipeline handler.
- */
 let notificationEngine;
+let playbackHistoryStack = [];
+const songCacheMap = new Map();
 
 /**
- * Complex Data Structure: Linear Execution Stack (LIFO - Last In, First Out)
- * Maintains a runtime trace array of historically loaded song identifiers.
- * This structure isolates playback data boundaries to allow step-back traversal.
+ * Global State Engine Trackers
+ * Tracks active media streams and hardware execution play states natively.
  */
-let playbackHistoryStack = [];
+let currentAudioElement = null;
+let currentActiveSongId = null;
 
 // ==========================================
 // 2. LIFECYCLE INITIALIZATION PIPELINE
 // ==========================================
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Initialize the third-party alert container with custom UI presentation tokens
   if (typeof Notyf !== 'undefined') {
     notificationEngine = new Notyf({
-      duration: 3500,
+      duration: 2500,
       position: { x: 'right', y: 'top' },
-      ripple: true
+      ripple: false
     });
   }
 
@@ -44,22 +36,17 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       songsDatabase = data;
+      songsDatabase.forEach(song => songCacheMap.set(song.id, song));
       renderSongCatalogue(songsDatabase);
       runCalendarSelection();
       
-      // Behavior: Use non-core library to broadcast a successful initialization alert
       if (notificationEngine) {
-        notificationEngine.success('Song database loaded successfully!');
+        notificationEngine.success('Song database compiled instantly.');
       }
     })
     .catch(error => {
       console.error('Database Fetch Error:', error);
       showFallbackError();
-      
-      // Behavior: Intercept pipeline crashes using automated third-party error cards
-      if (notificationEngine) {
-        notificationEngine.error('Critical Error: Failed to fetch song rows.');
-      }
     });
 
   const searchInput = document.getElementById('search-input');
@@ -114,9 +101,7 @@ function renderSongCatalogue(songsArray) {
 
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
-    loadButton.textContent = 'Load Media Stream';
-    
-    // Pass 'true' parameter to explicitly state this selection should push onto the stack tracking array
+    loadButton.textContent = '⚙️ Load Track';
     loadButton.addEventListener('click', () => handleStreamSong(song.id, true));
 
     cardElement.appendChild(cardTitle);
@@ -130,7 +115,6 @@ function renderSongCatalogue(songsArray) {
 // 5. DATA FILTERING LOGIC
 // ==========================================
 function handleSearchFiltering(event) {
-  // Scope definitions inside your interaction structures
   const searchString = event.target.value.toLowerCase().trim();
   
   const filteredSongs = songsDatabase.filter(song => {
@@ -138,35 +122,30 @@ function handleSearchFiltering(event) {
            song.history.toLowerCase().includes(searchString);
   });
 
-  // Behavior: If filter results drop down to 0, push an amber/error alert box to the user via Notyf
-  if (filteredSongs.length === 0 && notificationEngine) {
-    notificationEngine.error('No matching tracks found in catalogue.');
-  }
-
   renderSongCatalogue(filteredSongs);
 }
 
 // ==========================================
-// 6. PIPELINE INTERACTION: Multimedia Stream Engine
+// 6. PIPELINE INTERACTION: High-Speed Stream Engine
 // ==========================================
-
-/**
- * Dynamic Media Station compilation engine.
- * Maps indices, instantiates players, and handles custom stack trace histories.
- * @param {number} songId - Relational identifier unique targeting attribute to locate tracking structures.
- * @param {boolean} shouldPushToHistory - Conditional flag stating whether to append the active ID to the stack.
- */
 function handleStreamSong(songId, shouldPushToHistory = true) {
   const playerContainer = document.getElementById('player-container');
   if (!playerContainer) return;
 
-  const activeSong = songsDatabase.find(song => song.id === songId);
+  const activeSong = songCacheMap.get(songId);
   if (!activeSong) return;
 
-  // Complex Data Structure Push Operation: Append current song layout state to historical data records boundary
-  // Only push if the item was loaded fresh from the catalog, not when popping backwards via the back toggle
+  // Track State Synchronization
+  currentActiveSongId = songId;
+
+  // Safeguard: Stop any existing running audio instance before mounting a new player stream
+  if (currentAudioElement) {
+    currentAudioElement.pause();
+    currentAudioElement = null;
+  }
+
+  // Push Operation: Record traversal trace array boundaries
   if (shouldPushToHistory) {
-    // Structural Guard: Ensure we don't duplicate the same song consecutively on the stack frame pointers
     const topOfStack = playbackHistoryStack[playbackHistoryStack.length - 1];
     if (topOfStack !== songId) {
       playbackHistoryStack.push(songId); 
@@ -174,102 +153,137 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   }
 
   playerContainer.innerHTML = '';
-  
-  const loadingStatus = document.createElement('div');
-  loadingStatus.className = 'status-loading';
-  loadingStatus.textContent = '🔄 Initializing asynchronous server pipeline stream...';
-  playerContainer.appendChild(loadingStatus);
 
-  // Behavior: Broadcast an information feedback toast when a student begins loading a track stream
   if (notificationEngine) {
-    notificationEngine.success(`Connecting stream for: ${activeSong.title}`);
+    notificationEngine.success(`Streaming: ${activeSong.title}`);
   }
 
-  setTimeout(() => {
-    playerContainer.innerHTML = '';
+  // Instantiate Hidden Audio Core Node Engine
+  currentAudioElement = new Audio(activeSong.audioUrl);
+  currentAudioElement.autoplay = true;
 
-    const playerBox = document.createElement('div');
-    playerBox.className = 'player-box';
+  const playerBox = document.createElement('div');
+  playerBox.className = 'player-box';
 
-    const sourceIndicator = document.createElement('div');
-    sourceIndicator.className = 'player-source';
-    sourceIndicator.textContent = '📡 LIVE MEDIA RELEASING VIA SECURE DATABASE LINK';
+  const sourceIndicator = document.createElement('div');
+  sourceIndicator.className = 'player-source';
+  sourceIndicator.textContent = '📡 CUSTOM MULTIMEDIA STATION ACTIVATED';
 
-    // Complex Data Structure UI Controller Integration: Construct custom back navigation actions
-    // Only display this element if the stack data allocation block contains more than 1 past trace record
-    if (playbackHistoryStack.length > 1) {
-      const backButton = document.createElement('button');
-      backButton.className = 'btn';
-      backButton.style.marginBottom = '15px';
-      backButton.style.padding = '8px 16px';
-      backButton.style.fontSize = '0.85rem';
-      backButton.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
-      backButton.textContent = '🔙 Go Back to Previous Song';
-      
-      // Bind click trigger directly to our standalone stack evaluation router
-      backButton.addEventListener('click', handleNavigationBackwards);
-      playerBox.appendChild(backButton);
+  const trackTitle = document.createElement('h2');
+  trackTitle.className = 'track-heading';
+  trackTitle.textContent = activeSong.title;
+
+  const lyricsDisplay = document.createElement('div');
+  lyricsDisplay.className = 'lyrics-display';
+  lyricsDisplay.textContent = activeSong.lyrics;
+
+  // ==========================================
+  // EXCELLENCE FEATURE: CUSTOM CONTROL DASHBOARD BUILD
+  // ==========================================
+  const controlDashboard = document.createElement('div');
+  controlDashboard.style.display = 'flex';
+  controlDashboard.style.gap = '10px';
+  controlDashboard.style.justifyContent = 'center';
+  controlDashboard.style.margin = '20px 0';
+  controlDashboard.style.padding = '15px';
+  controlDashboard.style.background = '#0f172a';
+  controlDashboard.style.borderRadius = '12px';
+  controlDashboard.style.border = '1px solid #334155';
+
+  // 1. BUTTON: Previous Song (LIFO Stack Traversal)
+  const prevButton = document.createElement('button');
+  prevButton.className = 'btn';
+  prevButton.innerHTML = '⏮️ Previous';
+  // Disable visually if there's nowhere to go back to in our history array stack
+  if (playbackHistoryStack.length <= 1) {
+    prevButton.style.opacity = '0.4';
+    prevButton.style.cursor = 'not-allowed';
+  } else {
+    prevButton.addEventListener('click', handleNavigationBackwards);
+  }
+
+  // 2. BUTTON: Play / Pause Toggle Engine
+  const playPauseButton = document.createElement('button');
+  playPauseButton.className = 'btn';
+  playPauseButton.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+  playPauseButton.innerHTML = '⏸️ Pause';
+  
+  playPauseButton.addEventListener('click', () => {
+    if (currentAudioElement.paused) {
+      currentAudioElement.play();
+      playPauseButton.innerHTML = '⏸️ Pause';
+      playPauseButton.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    } else {
+      currentAudioElement.pause();
+      playPauseButton.innerHTML = '▶️ Play';
+      playPauseButton.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
     }
+  });
 
-    const trackTitle = document.createElement('h2');
-    trackTitle.className = 'track-heading';
-    trackTitle.textContent = activeSong.title;
+  // 3. BUTTON: Skip Forward (Linear Database Incrementor)
+  const forwardButton = document.createElement('button');
+  forwardButton.className = 'btn';
+  forwardButton.innerHTML = 'Next ⏭️';
+  forwardButton.addEventListener('click', handleNavigationForward);
 
-    const lyricsDisplay = document.createElement('div');
-    lyricsDisplay.className = 'lyrics-display';
-    lyricsDisplay.textContent = activeSong.lyrics;
+  // Append control elements cleanly to dashboard viewport
+  controlDashboard.appendChild(prevButton);
+  controlDashboard.appendChild(playPauseButton);
+  controlDashboard.appendChild(forwardButton);
 
-    const audioWrapper = document.createElement('div');
-    audioWrapper.className = 'audio-wrapper';
+  // Assemble full interface cards
+  playerBox.appendChild(sourceIndicator);
+  playerBox.appendChild(trackTitle);
+  playerBox.appendChild(controlDashboard);
+  playerBox.appendChild(lyricsDisplay);
 
-    const audioLabel = document.createElement('label');
-    audioLabel.className = 'audio-label';
-    audioLabel.textContent = 'HARDWARE DECODER AUDIO OUTPUT';
+  playerContainer.appendChild(playerBox);
 
-    const audioPlayer = document.createElement('audio');
-    audioPlayer.controls = true;
-    audioPlayer.autoplay = true;
-    audioPlayer.src = activeSong.audioUrl;
-
-    audioWrapper.appendChild(audioLabel);
-    audioWrapper.appendChild(audioPlayer);
-
-    playerBox.appendChild(sourceIndicator);
-    playerBox.appendChild(trackTitle);
-    playerBox.appendChild(lyricsDisplay);
-    playerBox.appendChild(audioWrapper);
-
-    playerContainer.appendChild(playerBox);
-  }, 450);
+  // Automation Link: When a hymn ends completely, auto-skip forward to the next index row item automatically!
+  currentAudioElement.addEventListener('ended', handleNavigationForward);
 }
 
 // ==========================================
 // 7. COMPLEX DATA STRUCTURE POINTER LOGIC
 // ==========================================
 
-/**
- * Stack Pop Functional Controller Module.
- * Triggered exclusively by user back-navigation interface nodes.
- * Pops the current track record frame completely out of structural memory boundaries
- * to expose and re-initialize the preceding data row block.
- */
 function handleNavigationBackwards() {
-  // Boundary Condition Safety Check: Validate if structural stack limits contain items to pop backward to
   if (playbackHistoryStack.length <= 1) {
     if (notificationEngine) {
-      notificationEngine.error('Stack Underflow Boundary: No further history tracked.');
+      notificationEngine.error('No further history tracked.');
     }
     return; 
   }
 
-  // Complex Data Structure Pop Operation: Remove current active song record array tracking index from memory top layer
+  // Pop out the current active node context track item layer completely
   playbackHistoryStack.pop(); 
-
-  // Read the new top element vector left on top of the trace array stack tree workspace
   const targetPreviousSongId = playbackHistoryStack[playbackHistoryStack.length - 1];
 
-  // Reload the media streams programmatically using the target index reference pointer
+  // Reload the media streams backwards without adding duplicates onto the history track stack
   handleStreamSong(targetPreviousSongId, false);
+}
+
+/**
+ * Excellence Sequence Controller: Forward Index Nav Engine
+ * Evaluates current array offsets, handles edge boundary rollover exceptions,
+ * and increments pointers to compute adjacent song tracks instantly.
+ */
+function handleNavigationForward() {
+  if (songsDatabase.length === 0) return;
+
+  // Locate our index pointer rank location inside the database array structure
+  const currentDatabaseIndex = songsDatabase.findIndex(song => song.id === currentActiveSongId);
+
+  // Boundary Condition Check: If we are on the very last song row, loop back around to index 0 smoothly
+  let nextDatabaseIndex = currentDatabaseIndex + 1;
+  if (nextDatabaseIndex >= songsDatabase.length) {
+    nextDatabaseIndex = 0; 
+  }
+
+  const nextSongTarget = songsDatabase[nextDatabaseIndex];
+  
+  // Fire execution pipeline
+  handleStreamSong(nextSongTarget.id, true);
 }
 
 // ==========================================
@@ -281,6 +295,6 @@ function showFallbackError() {
   
   const errorWrapper = document.createElement('div');
   errorWrapper.className = 'error-fallback-box';
-  errorWrapper.textContent = 'System Error: Unable to stream song database. Please check your network connection.';
+  errorWrapper.textContent = 'System Error: Unable to stream song database.';
   container.appendChild(errorWrapper);
 }
