@@ -6,7 +6,6 @@
   <title>Rathkeale College Song Portal</title>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
-  
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -24,25 +23,23 @@
 
     <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search catalogue by song title or classification..." />
 
-    <div class="main-layout">
-      <div>
-        <div class="column-title">Song Catalogue</div>
-        <div id="songs-container"></div>
-      </div>
-
-      <div>
-        <div class="column-title">Media Control Station</div>
-        <div id="player-container">
-          <div style="color: var(--text-muted); text-align: center; padding: 60px 40px; background: var(--bg-card); border-radius: 16px; border: 1px dashed #1e293b;">
-            Select an operational track from the catalogue to stream media and dynamic lyrical documentation.
-          </div>
+    <div class="hero-layout-zone">
+      <div class="column-title">Now Playing Station</div>
+      <div id="player-container">
+        <div style="color: var(--text-muted); text-align: center; padding: 50px 40px; background: var(--bg-card); border-radius: 16px; border: 1px dashed var(--glass-border);">
+          Select an operational track from the catalogue below to stream live media, custom hardware controls, and dynamic lyrical documentation.
         </div>
       </div>
     </div>
+
+    <div class="catalogue-layout-zone">
+      <div class="column-title">Song Catalogue Collection</div>
+      <div id="songs-container"></div>
+    </div>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-
   <script src="../src/App.js"></script>
 </body>
 </html>
