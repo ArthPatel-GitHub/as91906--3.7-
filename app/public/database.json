@@ -1,82 +1,137 @@
 [
   {
-    "id": 1,
+    "id": "school-hymn",
     "title": "School Hymn (Lord of our life)",
     "lyrics": "Lord of our life, and God of our salvation,\nStar of our night, and hope of every nation,\nHear and receive Thy Church's supplication,\nLord God Almighty.\n\nLord, Thou canst help when earthly armour faileth;\nLord, Thou canst save when deadly sin assaileth;\nLord, o'er Thy Church nor death nor hell prevaileth;\nGrant us Thy peace, Lord.\n\nPeace in our hearts, our evil thoughts assuaging;\nPeace in Thy Church, where brothers are engaging;\nPeace when the world its busy war is waging;\nCalm Thy foes' raging.\n\nGrant us Thy help till foes are backward driven;\nGrant them Thy truth, that they may be forgiven;\nGrant peace on earth, and after worlds have striven,\nPeace in Thy heaven.",
     "history": "The traditional foundation hymn sung by all Rathkeale students during formal assemblies and chapel services.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "category_id": 1
+    "type": "hymn",
+    "durationInSeconds": 210
   },
   {
-    "id": 2,
+    "id": "jerusalem",
     "title": "Jerusalem",
     "lyrics": "And did those feet in ancient time\nWalk upon England's mountains green?\nAnd was the holy Lamb of God\nOn England's pleasant pastures seen?\nAnd did the countenance divine\nShine forth upon our clouded hills?\nAnd was Jerusalem builded here\nAmong these dark satanic mills?\n\nBring me my bow of burning gold!\nBring me my arrows of desire!\nBring me my spear! O clouds unfold!\nBring me my chariot of fire!\nI will not cease from mental fight,\nNor shall my sword sleep in my hand,\nTill we have built Jerusalem\nIn England's green and pleasant land.",
     "history": "A powerful anthem traditionally sung with immense pride and energy during Friday house singing sessions.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "category_id": 2
+    "type": "anthem",
+    "durationInSeconds": 165
   },
   {
-    "id": 3,
+    "id": "rathkeale-school-song",
     "title": "Rathkeale School Song",
     "lyrics": "To the hills we lift our eyes,\nWhere the golden sunbeams rise.\nStanding proud and standing true,\nWe pledge our hearts, our strength to you.\nThrough the years our voices ring,\nOf loyalty and truth we sing.\n\nIn the classroom, on the field,\nTo our challenges we never yield.\nHearts together, side by side,\nWalking with Rathkeale pride.\nWith our green and with our red,\nBy our ancient values led.",
     "history": "Composed to celebrate the unique environmental surroundings, values, and strong community spirit of the college.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    "category_id": 2
+    "type": "anthem",
+    "durationInSeconds": 140
   },
   {
-    "id": 4,
+    "id": "abide-with-me",
     "title": "Abide With Me",
     "lyrics": "Abide with me; fast falls the eventide;\nThe darkness deepens; Lord, with me abide.\nWhen other helpers fail and comforts flee,\nHelp of the helpless, oh, abide with me.\n\nSwift to its close ebbs out life's little day;\nEarth's joys grow dim, its glories pass away;\nChange and decay in all around I see;\nO Thou who changest not, abide with me.\n\nI need Thy presence every passing hour;\nWhat but Thy grace can foil the tempter's power?\nWho, like Thyself, my guide and stay can be?\nThrough cloud and sunshine, Lord, abide with me.",
     "history": "A deeply respected hymn utilized during traditional evening chapel services and solemn school events.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-    "category_id": 1
+    "type": "hymn",
+    "durationInSeconds": 235
   },
   {
-    "id": 5,
+    "id": "guide-me-o-thou-great-redeemer",
     "title": "Guide Me, O Thou Great Redeemer",
     "lyrics": "Guide me, O Thou great Redeemer,\nPilgrim through this barren land;\nI am weak, but Thou art mighty;\nHold me with Thy powerful hand;\nBread of heaven, Bread of heaven,\nFeed me till I want no more.\n\nOpen now the crystal fountain,\nWhence the healing stream doth flow;\nLet the fire and cloudy pillar\nLead me all my journey through;\nStrong Deliverer, Strong Deliverer,\nBe Thou still my strength and shield.\n\nWhen I tread the verge of Jordan,\nBid my anxious fears subside;\nDeath of death, and hell's destruction,\nLand me safe on Canaan's side;\nSongs of praises, Songs of praises\nI will ever give to Thee.",
     "history": "A classic, soaring hymn often selected for major school calendar operations and public community services.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-    "category_id": 1
+    "type": "hymn",
+    "durationInSeconds": 198
   },
   {
-    "id": 6,
+    "id": "amazing-grace",
     "title": "Amazing Grace",
     "lyrics": "Amazing grace! How sweet the sound\nThat saved a wretch like me!\nI once was lost, but now am found;\nWas blind, but now I see.\n\n'Twas grace that taught my heart to fear,\nAnd grace my fears relieved;\nHow precious did that grace appear\nThe hour I first believed.\n\nThrough many dangers, toils and snares,\nI have already come;\n'Tis grace hath brought me safe thus far,\nAnd grace will lead me home.\n\nWhen we've been there ten thousand years,\nBright shining as the sun,\nWe've no less days to sing God's praise\nThan when we've first begun.",
     "history": "A universally recognized hymn included for reflection and special combined college services.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-    "category_id": 1
+    "type": "hymn",
+    "durationInSeconds": 245
   },
   {
-    "id": 7,
+    "id": "how-great-thou-art",
     "title": "How Great Thou Art",
     "lyrics": "O Lord, my God, when I in awesome wonder\nConsider all the worlds Thy Hands have made;\nI see the stars, I hear the rolling thunder,\nThy power throughout the universe displayed.\n\nThen sings my soul, my Saviour God, to Thee,\nHow great Thou art! How great Thou art!\nThen sings my soul, my Saviour God, to Thee,\nHow great Thou art! How great Thou art!\n\nWhen Christ shall come with shout of acclamation\nAnd take me home, what joy shall fill my heart!\nThen I shall bow in humble adoration,\nAnd there proclaim: 'My God, how great Thou art!'",
     "history": "A powerful piece with deep structural dynamics frequently used to open formal prize-giving events.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-    "category_id": 1
+    "type": "hymn",
+    "durationInSeconds": 270
   },
   {
-    "id": 8,
+    "id": "be-thou-my-vision",
     "title": "Be Thou My Vision",
     "lyrics": "Be Thou my Vision, O Lord of my heart;\nNaught be all else to me, save that Thou art;\nThou my best thought, by day or by night,\nWaking or sleeping, Thy presence my light.\n\nBe Thou my Wisdom, and Thou my true Word;\nI ever with Thee and Thou with me, Lord;\nThou my great Father, I Thy true son;\nThou in me dwelling, and I with Thee one.\n\nRiches I heed not, nor man's empty praise,\nThou mine inheritance, now and always;\nThou and Thou only, first in my heart,\nHigh King of Heaven, my treasure Thou art.",
     "history": "An ancient traditional melody used during quiet Sunday evening chapel services for boarders.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-    "category_id": 1
+    "type": "hymn",
+    "durationInSeconds": 185
   },
   {
-    "id": 9,
+    "id": "god-defend-new-zealand",
     "title": "God Defend New Zealand",
     "lyrics": "God of Nations at Thy feet,\nIn the bonds of love we meet,\nHear our voices, we entreat,\nGod defend our free land.\nGuard Pacific's triple star,\nFrom the shafts of strife and war,\nMake her praises heard afar,\nGod defend New Zealand.\n\nE Ihowā Atua,\nO ngā iwi mātou rā\nĀta whakarangona;\nMe aroha noa\nKia hua ko te pai;\nKia tau tō atawhai;\nManaakitia mai\nAotearoa.",
     "history": "The national anthem, practiced diligently to ensure accurate bilingual pronunciation during inter-school fixtures.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
-    "category_id": 2
+    "type": "anthem",
+    "durationInSeconds": 150
   },
   {
-    "id": 10,
+    "id": "swing-low-sweet-chariot",
     "title": "Swing Low, Sweet Chariot",
     "lyrics": "Swing low, sweet chariot,\nComing for to carry me home,\nSwing low, sweet chariot,\nComing for to carry me home.\n\nI looked over Jordan, and what did I see\nComing for to carry me home?\nA band of angels coming after me,\nComing for to carry me home.\n\nIf you get there before I do,\nComing for to carry me home,\nTell all my friends I'm coming too,\nComing for to carry me home.",
     "history": "A traditional anthem often utilized to build camaraderie and unified school pride at major sporting exchanges.",
     "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
-    "category_id": 2
+    "type": "anthem",
+    "durationInSeconds": 135
+  },
+  {
+    "id": "lord-of-the-dance",
+    "title": "Lord of the Dance",
+    "lyrics": "I danced in the morning when the world was begun,\nAnd I danced in the moon and the stars and the sun,\nAnd I came down from heaven and I danced on the earth,\nAt Bethlehem I had my birth.\n\nDance, then, wherever you may be,\nI am the Lord of the Dance, said he,\nAnd I'll lead you all, wherever you may be,\nAnd I'll lead you all in the Dance, said he.",
+    "history": "A popular 1963 English hymn written by Sydney Carter, adapting the melody of the Shaker song 'Simple Gifts'.",
+    "audioUrl": "audio/lord-of-the-dance.mp3",
+    "type": "hymn",
+    "durationInSeconds": 195
+  },
+  {
+    "id": "country-roads",
+    "title": "Take Me Home, Country Roads",
+    "lyrics": "Almost heaven, West Virginia,\nBlue Ridge Mountains, Shenandoah River.\nLife is old there, older than the trees,\nYounger than the mountains, blowing like a breeze.\n\nCountry roads, take me home,\nTo the place I belong,\nWest Virginia, mountain mama,\nTake me home, country roads.",
+    "history": "The legendary 1971 country-folk anthem written by John Denver, Bill Danoff, and Taffy Nivert.",
+    "audioUrl": "audio/country-roads.mp3",
+    "type": "anthem",
+    "durationInSeconds": 198
+  },
+  {
+    "id": "where-the-road-runs-out",
+    "title": "Where the Road Runs Out (And the Signposts End)",
+    "lyrics": "Where the road runs out and the signposts end,\nWe will find our way with a trusted friend.\nThrough the mist and rain, under stormy skies,\nWe will watch the dawn and the sunbeams rise.",
+    "history": "A classic, resonant piece depicting journeying, exploration, and discovery at the margins of map borders.",
+    "audioUrl": "audio/where-the-road-runs-out.mp3",
+    "type": "anthem",
+    "durationInSeconds": 240
+  },
+  {
+    "id": "viva-la-vida",
+    "title": "Viva La Vida",
+    "lyrics": "I used to rule the world,\nSeas would rise when I gave the word.\nNow in the morning I sleep alone,\nSweep the streets I used to own.\n\nI hear Jerusalem bells a-ringing,\nRoman Cavalry choirs are singing.\nBe my mirror, my sword and shield,\nMy missionaries in a foreign field.",
+    "history": "Released by Coldplay in 2008, featuring historical baroque themes and looping orchestral string textures.",
+    "audioUrl": "audio/viva-la-vida.mp3",
+    "type": "anthem",
+    "durationInSeconds": 242
+  },
+  {
+    "id": "let-it-be",
+    "title": "Let It Be",
+    "lyrics": "When I find myself in times of trouble, Mother Mary comes to me,\nSpeaking words of wisdom, let it be.\nAnd in my hour of darkness she is standing right in front of me,\nSpeaking words of wisdom, let it be.\n\nLet it be, let it be, let it be, let it be,\nWhisper words of wisdom, let it be.",
+    "history": "The iconic 1970 title track gospel-rock ballad recorded by The Beatles, written by Paul McCartney.",
+    "audioUrl": "audio/let-it-be.mp3",
+    "type": "hymn",
+    "durationInSeconds": 243
   }
 ]

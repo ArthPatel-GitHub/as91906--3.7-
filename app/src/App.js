@@ -11,7 +11,7 @@ const songCacheMap = new Map();
 
 let currentAudioElement = null;
 let currentActiveSongId = null;
-let progressUpdateInterval = null; // High-Performance hardware tracking pointer for timeline sync
+let progressUpdateInterval = null;
 
 // ==========================================
 // 2. LIFECYCLE INITIALIZATION PIPELINE
@@ -33,7 +33,9 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       songsDatabase = data;
+      // High Performance Mapping: Cache indices on boot-up for instant lookups
       songsDatabase.forEach(song => songCacheMap.set(song.id, song));
+      
       renderSongCatalogue(songsDatabase);
       runCalendarSelection();
       
@@ -42,13 +44,23 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch(error => {
-      console.error('Database Fetch Error:', error);
+      console.error('Critical System Exception Captured:', error);
       showFallbackError();
+      if (notificationEngine) {
+        notificationEngine.error('Critical Error: Failed to fetch data streams.');
+      }
     });
 
+  // HIGH-SPEED PERFORMANCE OPTIMIZATION: INPUT DEBOUNCING GATING
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
-    searchInput.addEventListener('input', handleSearchFiltering);
+    let debounceTimeoutPointer;
+    searchInput.addEventListener('input', (event) => {
+      clearTimeout(debounceTimeoutPointer);
+      debounceTimeoutPointer = setTimeout(() => {
+        handleSearchFiltering(event);
+      }, 250); // Suppresses layout thrashing by gating execution to 250ms quiet intervals
+    });
   }
 });
 
@@ -93,8 +105,8 @@ function renderSongCatalogue(songsArray) {
     const cardTitle = document.createElement('h3');
     cardTitle.textContent = song.title;
 
-    const cardHistory = document.createElement('p');
-    cardHistory.textContent = song.history;
+    const cardP = document.createElement('p');
+    cardP.textContent = song.history;
 
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
@@ -102,7 +114,7 @@ function renderSongCatalogue(songsArray) {
     loadButton.addEventListener('click', () => handleStreamSong(song.id, true));
 
     cardElement.appendChild(cardTitle);
-    cardElement.appendChild(cardHistory);
+    cardElement.appendChild(cardP);
     cardElement.appendChild(loadButton);
     container.appendChild(cardElement);
   });
@@ -119,6 +131,10 @@ function handleSearchFiltering(event) {
            song.history.toLowerCase().includes(searchString);
   });
 
+  if (filteredSongs.length === 0 && notificationEngine) {
+    notificationEngine.error('No matching tracks found.');
+  }
+
   renderSongCatalogue(filteredSongs);
 }
 
@@ -129,18 +145,20 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   const playerContainer = document.getElementById('player-container');
   if (!playerContainer) return;
 
+  // Instant lookups utilizing Map data structure instead of looping arrays
   const activeSong = songCacheMap.get(songId);
   if (!activeSong) return;
 
   currentActiveSongId = songId;
 
-  // Clear tracking operations from any previously running media components
+  // Memory Safety: Purge active thread tracking loops before instantiating new allocations
+  safelyPurgeActiveIntervals();
   if (currentAudioElement) {
     currentAudioElement.pause();
-    clearInterval(progressUpdateInterval);
     currentAudioElement = null;
   }
 
+  // Complex LIFO Stack Record Traversal tracking boundaries
   if (shouldPushToHistory) {
     const topOfStack = playbackHistoryStack[playbackHistoryStack.length - 1];
     if (topOfStack !== songId) {
@@ -173,41 +191,42 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   lyricsDisplay.textContent = activeSong.lyrics;
 
   // ==========================================
-  // CUSTOM CONTROL DASHBOARD
+  // CUSTOM MEDIA CONTROLLER DASHBOARD
   // ==========================================
   const controlDashboard = document.createElement('div');
-  controlDashboard.style.background = '#0f172a';
+  controlDashboard.style.background = '#0d1117';
   controlDashboard.style.borderRadius = '12px';
-  controlDashboard.style.border = '1px solid #334155';
+  controlDashboard.style.border = '1px solid var(--glass-border)';
   controlDashboard.style.padding = '20px';
   controlDashboard.style.margin = '20px 0';
 
-  // Layout Grid Block 1: Audio Core Buttons
   const buttonRow = document.createElement('div');
   buttonRow.style.display = 'flex';
   buttonRow.style.gap = '10px';
   buttonRow.style.justifyContent = 'center';
   buttonRow.style.marginBottom = '20px';
 
+  // Control Node 1: LIFO Step-Back Controller
   const prevButton = document.createElement('button');
   prevButton.className = 'btn';
   prevButton.innerHTML = '⏮️ Previous';
   if (playbackHistoryStack.length <= 1) {
-    prevButton.style.opacity = '0.4';
+    prevButton.style.opacity = '0.3';
     prevButton.style.cursor = 'not-allowed';
   } else {
     prevButton.addEventListener('click', handleNavigationBackwards);
   }
 
+  // Control Node 2: Programmatic Play/Pause State Switcher
   const playPauseButton = document.createElement('button');
   playPauseButton.className = 'btn';
-  playPauseButton.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+  playPauseButton.style.background = 'linear-gradient(135deg, var(--brand-green) 0%, #059669 100%)';
   playPauseButton.innerHTML = '⏸️ Pause';
   playPauseButton.addEventListener('click', () => {
     if (currentAudioElement.paused) {
       currentAudioElement.play();
       playPauseButton.innerHTML = '⏸️ Pause';
-      playPauseButton.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+      playPauseButton.style.background = 'linear-gradient(135deg, var(--brand-green) 0%, #059669 100%)';
     } else {
       currentAudioElement.pause();
       playPauseButton.innerHTML = '▶️ Play';
@@ -215,24 +234,24 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     }
   });
 
+  // Control Node 3: Database Index Step-Forward Calculator
   const forwardButton = document.createElement('button');
   forwardButton.className = 'btn';
   forwardButton.innerHTML = 'Next ⏭️';
   forwardButton.addEventListener('click', handleNavigationForward);
 
-  // EXCELLENCE CAPABILITY ADDITION: Download Module Link
+  // Control Node 4: Downstream Archiving Element (Download Anchor)
   const downloadButton = document.createElement('a');
   downloadButton.className = 'btn';
-  downloadButton.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'; // Amber Accent Layout Theme
+  downloadButton.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
   downloadButton.style.textDecoration = 'none';
   downloadButton.style.display = 'inline-flex';
   downloadButton.style.alignItems = 'center';
-  downloadButton.style.justifyContent = 'center';
   downloadButton.href = activeSong.audioUrl;
   downloadButton.download = `${activeSong.title.replace(/\s+/g, '_')}_Practice_Track.mp3`;
   downloadButton.innerHTML = '📥 Download';
   downloadButton.addEventListener('click', () => {
-    if (notificationEngine) notificationEngine.success('Initializing local hardware download container...');
+    if (notificationEngine) notificationEngine.success('Downloading media file...');
   });
 
   buttonRow.appendChild(prevButton);
@@ -240,7 +259,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   buttonRow.appendChild(forwardButton);
   buttonRow.appendChild(downloadButton);
 
-  // Layout Grid Block 2: PLAYBACK TIMELINE WORKSPACE (Excellence State Controller)
+  // PROGRESS SCRUBBING GRAPHIC GRID
   const timelineContainer = document.createElement('div');
   timelineContainer.style.display = 'flex';
   timelineContainer.style.alignItems = 'center';
@@ -248,7 +267,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 
   const currentTimeText = document.createElement('span');
   currentTimeText.style.fontSize = '0.8rem';
-  currentTimeText.style.color = '#94a3b8';
+  currentTimeText.style.color = 'var(--text-muted)';
   currentTimeText.style.fontFamily = 'monospace';
   currentTimeText.textContent = '0:00';
 
@@ -259,26 +278,24 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   timelineSlider.value = '0';
   timelineSlider.style.flex = '1';
   timelineSlider.style.cursor = 'pointer';
-  timelineSlider.style.accentColor = 'var(--accent-blue)';
+  timelineSlider.style.accentColor = 'var(--brand-green)';
 
   const totalTimeText = document.createElement('span');
   totalTimeText.style.fontSize = '0.8rem';
-  totalTimeText.style.color = '#94a3b8';
+  totalTimeText.style.color = 'var(--text-muted)';
   totalTimeText.style.fontFamily = 'monospace';
   totalTimeText.textContent = '0:00';
 
-  // Interactivity Hook: Let the student scrub through the progress bar to alter track placement
+  // Scrubbing Listener: Direct state virtualization mutations
   timelineSlider.addEventListener('input', () => {
     if (!currentAudioElement.duration) return;
-    const seekTargetTime = (timelineSlider.value / 100) * currentAudioElement.duration;
-    currentAudioElement.currentTime = seekTargetTime;
+    currentAudioElement.currentTime = (timelineSlider.value / 100) * currentAudioElement.duration;
   });
 
   timelineContainer.appendChild(currentTimeText);
   timelineContainer.appendChild(timelineSlider);
   timelineContainer.appendChild(totalTimeText);
 
-  // Append elements to the primary layout structure
   controlDashboard.appendChild(buttonRow);
   controlDashboard.appendChild(timelineContainer);
 
@@ -289,15 +306,12 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 
   playerContainer.appendChild(playerBox);
 
-  // State Engine Automation: Sync progress ticks accurately using high-performance clock intervals
+  // Sync polling cycles utilizing 250ms intervals
   progressUpdateInterval = setInterval(() => {
     if (!currentAudioElement || !currentAudioElement.duration) return;
     
-    // Math Formula Implementation: Calculate percentage ratio of audio completion boundaries
-    const completePercentage = (currentAudioElement.currentTime / currentAudioElement.duration) * 100;
-    timelineSlider.value = completePercentage;
+    timelineSlider.value = (currentAudioElement.currentTime / currentAudioElement.duration) * 100;
 
-    // String manipulation formatting helper rules to parse seconds to minutes:seconds configurations
     const currentMin = Math.floor(currentAudioElement.currentTime / 60);
     const currentSec = Math.floor(currentAudioElement.currentTime % 60).toString().padStart(2, '0');
     currentTimeText.textContent = `${currentMin}:${currentSec}`;
@@ -308,7 +322,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   }, 250);
 
   currentAudioElement.addEventListener('ended', () => {
-    clearInterval(progressUpdateInterval);
+    safelyPurgeActiveIntervals();
     handleNavigationForward();
   });
 }
@@ -316,11 +330,10 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 // ==========================================
 // 7. COMPLEX DATA STRUCTURE POINTER LOGIC
 // ==========================================
+
 function handleNavigationBackwards() {
   if (playbackHistoryStack.length <= 1) {
-    if (notificationEngine) {
-      notificationEngine.error('No further history tracked.');
-    }
+    if (notificationEngine) notificationEngine.error('No further history tracked.');
     return; 
   }
 
@@ -334,6 +347,8 @@ function handleNavigationForward() {
 
   const currentDatabaseIndex = songsDatabase.findIndex(song => song.id === currentActiveSongId);
   let nextDatabaseIndex = currentDatabaseIndex + 1;
+  
+  // Boundary Exception Guard: Roll back cleanly around to index 0 if target breaches limits
   if (nextDatabaseIndex >= songsDatabase.length) {
     nextDatabaseIndex = 0; 
   }
@@ -343,14 +358,82 @@ function handleNavigationForward() {
 }
 
 // ==========================================
-// 8. SYSTEM EXCEPTION RECOVERY
+// 8. GARBAGE DISPOSAL & EXCEPTION CLEANING
 // ==========================================
+
+function safelyPurgeActiveIntervals() {
+  if (progressUpdateInterval) {
+    clearInterval(progressUpdateInterval);
+    progressUpdateInterval = null;
+  }
+}
+
 function showFallbackError() {
   const container = document.getElementById('songs-container');
   if (!container) return;
+  container.innerHTML = `<div class="error-fallback-box">System Exception: Connection to song bank failed.</div>`;
+}
+
+// Active Filter State Vectors
+let activeTypeFilter = 'all'; // Can be: 'all', 'hymn', 'anthem'
+let activeLengthFilter = 'all'; // Can be: 'all', 'short', 'long'
+
+// Filter Button Event Wire-up
+
+const filterBindings = [
+  { id: 'filter-all-type', type: 'type', value: 'all' },
+  { id: 'filter-hymn', type: 'type', value: 'hymn' },
+  { id: 'filter-anthem', type: 'type', value: 'anthem' },
+  { id: 'filter-all-len', type: 'length', value: 'all' },
+  { id: 'filter-short', type: 'length', value: 'short' },
+  { id: 'filter-long', type: 'length', value: 'long' }
+];
+
+filterBindings.forEach(binding => {
+  const btn = document.getElementById(binding.id);
+  if (btn) {
+    btn.addEventListener('click', () => {
+      // Manage active visual tab switching states
+      btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Update data variables
+      if (binding.type === 'type') activeTypeFilter = binding.value;
+      if (binding.type === 'length') activeLengthFilter = binding.value;
+      
+      // Re-trigger the filtering logic immediately using current search text
+      executeCompoundFiltering();
+    });
+  }
+});
+
+// Compound Multi-Criteria Filter Matrix
+
+function executeCompoundFiltering() {
+  const searchInput = document.getElementById('search-input');
+  const searchString = searchInput ? searchInput.value.toLowerCase().trim() : '';
   
-  const errorWrapper = document.createElement('div');
-  errorWrapper.className = 'error-fallback-box';
-  errorWrapper.textContent = 'System Error: Unable to stream song database.';
-  container.appendChild(errorWrapper);
+  const filteredSongs = songsDatabase.filter(song => {
+    // Stage 1: Text Search Evaluation Gate
+    const matchesText = song.title.toLowerCase().includes(searchString) || 
+                        song.history.toLowerCase().includes(searchString);
+                        
+    // Stage 2: Classification Evaluation Gate (Assumes your json rows have a .type field)
+    const matchesType = (activeTypeFilter === 'all') || 
+                        (song.type && song.type.toLowerCase() === activeTypeFilter);
+                        
+    // Stage 3: Duration Evaluation Gate (Assumes your json rows have a .durationInSeconds field)
+    let matchesLength = true;
+    if (activeLengthFilter === 'short') matchesLength = (song.durationInSeconds < 180);
+    if (activeLengthFilter === 'long') matchesLength = (song.durationInSeconds >= 180);
+    
+    // Return true ONLY if the song clears all three conditional bounds simultaneously
+    return matchesText && matchesType && matchesLength;
+  });
+
+  if (filteredSongs.length === 0 && notificationEngine) {
+    notificationEngine.error('No matching tracks found in filter matrices.');
+  }
+
+  renderSongCatalogue(filteredSongs);
 }

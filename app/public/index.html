@@ -23,6 +23,21 @@
 
     <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search catalogue by song title or classification..." />
 
+    <div class="filter-dashboard">
+  <div class="filter-group">
+    <span class="filter-label">Classification:</span>
+    <button id="filter-all-type" class="filter-btn active">All</button>
+    <button id="filter-hymn" class="filter-btn">Hymns</button>
+    <button id="filter-anthem" class="filter-btn">Anthems</button>
+  </div>
+  
+  <div class="filter-group">
+    <span class="filter-label">Track Length:</span>
+    <button id="filter-all-len" class="filter-btn active">All Durations</button>
+    <button id="filter-short" class="filter-btn">Short (< 3 mins)</button>
+    <button id="filter-long" class="filter-btn">Extended (3+ mins)</button>
+  </div>
+</div>
     <div class="hero-layout-zone">
       <div class="column-title">Now Playing Station</div>
       <div id="player-container">
