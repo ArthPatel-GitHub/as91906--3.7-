@@ -7,8 +7,8 @@
   --bg-input: #1f2937;
   --text-main: #f9fafb;
   --text-muted: #9ca3af;
-  --brand-green: #10b981; /* Rathkeale Primary Branding Token */
-  --brand-red: #dc2626;   /* Rathkeale Secondary Branding Token */
+  --brand-green: #10b981; 
+  --brand-red: #dc2626;   
   --accent-blue: #6366f1;
   --glass-border: rgba(255, 255, 255, 0.05);
   --neon-glow: rgba(16, 185, 129, 0.15);
@@ -31,36 +31,126 @@ body {
 }
 
 /* ==========================================
-   2. APP BAR HEADER STYLING
+   2. REWORKED INLINE HEADER ZONE
    ========================================== */
-header { 
-  border-bottom: 1px solid var(--glass-border); 
-  padding-bottom: 20px; 
-  margin-bottom: 30px; 
-  text-align: center;
+.app-branding-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px; 
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 24px;
+  margin-bottom: 35px;
 }
 
-h1 { 
-  color: #ffffff; 
-  margin: 0; 
-  font-size: 2.8rem; 
-  font-weight: 900; 
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  background: linear-gradient(135deg, #ffffff 30%, var(--brand-green) 100%);
+.brand-identity-block {
+  flex-shrink: 0; 
+  text-align: left;
+}
+
+.brand-identity-block h1 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #ffffff 40%, var(--brand-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-header p { 
-  margin: 6px 0 0 0; 
-  color: var(--brand-red); 
-  font-size: 1.1rem; 
+.brand-identity-block p {
+  margin: 4px 0 0 0;
+  color: var(--brand-red);
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
+/* SEARCH INPUT CONTROLS */
+.search-bar-wrapper {
+  flex-grow: 1; 
+  max-width: 800px; 
+  position: relative;
+}
+
+#search-input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 50px; 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+#search-input:focus {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+/* POPDOWN SUGGESTIONS */
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #111827; 
+  border: 1px solid var(--glass-border);
+  border-top: none;
+  border-radius: 16px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 999;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  margin-top: 8px;
+}
+
+.suggestions-dropdown.hidden {
+  display: none;
+}
+
+.suggestion-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s ease;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: #1f2937; 
+}
+
+.suggestion-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.suggestion-meta {
+  font-size: 0.75rem;
+  color: var(--brand-green);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+/* ==========================================
+   3. GENERAL SITE LAYOUT WIDGETS
+   ========================================== */
 .widget { 
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.05));
   backdrop-filter: blur(12px);
@@ -87,30 +177,65 @@ header p {
   color: #ffffff;
 }
 
-.search-bar { 
-  width: 100%; 
-  padding: 16px 22px; 
-  border-radius: 12px; 
-  border: 1px solid var(--glass-border); 
-  background-color: rgba(31, 41, 55, 0.6); 
-  backdrop-filter: blur(8px);
-  color: #ffffff; 
-  font-size: 1.05rem; 
-  box-sizing: border-box; 
-  margin-bottom: 35px; 
-  outline: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+/* ==========================================
+   4. MINIMALIST FILTER PANEL
+   ========================================== */
+.filter-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.03); 
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08); 
+  backdrop-filter: blur(12px); 
+  margin-bottom: 40px;
 }
 
-.search-bar:focus {
-  border-color: var(--brand-green);
-  background-color: rgba(31, 41, 55, 0.9);
-  box-shadow: 0 0 25px var(--neon-glow), inset 0 2px 4px rgba(0,0,0,0.4);
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4); 
+  width: 120px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; 
+}
+
+.filter-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 22px; 
+  border-radius: 50px; 
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+.filter-btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.filter-btn.active {
+  background: #ffffff;
+  color: #000000; 
+  border-color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15); 
 }
 
 /* ==========================================
-   3. HERO REGION: NOW PLAYING TOP WORKSPACE
+   5. NOW PLAYING WORKSPACE HERO
    ========================================== */
 .hero-layout-zone {
   margin-bottom: 45px;
@@ -122,13 +247,6 @@ header p {
   border-radius: 20px; 
   border: 1px solid rgba(16, 185, 129, 0.3); 
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
-  animation: livePulse 3s infinite ease-in-out;
-}
-
-@keyframes livePulse {
-  0% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0px rgba(16, 185, 129, 0); }
-  50% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 15px rgba(16, 185, 129, 0.1); }
-  100% { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0px rgba(16, 185, 129, 0); }
 }
 
 .track-heading {
@@ -156,7 +274,6 @@ header p {
   border: 1px solid var(--glass-border); 
   margin-top: 20px;
   white-space: pre-wrap; 
-  font-style: normal; 
   color: #e2e8f0; 
   font-size: 1.1rem;
   max-height: 220px;
@@ -166,15 +283,8 @@ header p {
   box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);
 }
 
-.lyrics-display::-webkit-scrollbar { width: 6px; }
-.lyrics-display::-webkit-scrollbar-track { background: transparent; }
-.lyrics-display::-webkit-scrollbar-thumb {
-  background: var(--brand-green);
-  border-radius: 10px;
-}
-
 /* ==========================================
-   4. INTERACTIVE ACTIONS & MEDIA BUTTONS
+   6. INTERACTIVE ACTIONS & MEDIA BUTTONS
    ========================================== */
 .btn { 
   background: linear-gradient(135deg, var(--brand-red) 0%, #b91c1c 100%);
@@ -188,19 +298,15 @@ header p {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
 }
 
 .btn:hover { 
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
   filter: brightness(1.1);
 }
 
-.btn:active { transform: translateY(1px); }
-
 /* ==========================================
-   5. LOWER REGION: SYSTEM CATALOGUE GRID
+   7. LOWER CATALOGUE GRID
    ========================================== */
 .column-title { 
   font-size: 1.4rem; 
@@ -228,14 +334,13 @@ header p {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s ease;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
 }
 
 .card:hover {
   transform: translateY(-4px);
   border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 }
 
 .card h3 { 
@@ -257,12 +362,10 @@ header p {
   width: 100%;
   background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
   border: 1px solid var(--glass-border);
-  box-shadow: none;
 }
 
 .card .btn:hover {
   background: linear-gradient(135deg, var(--brand-green) 0%, #059669 100%);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 .text-muted-fallback {
@@ -270,114 +373,22 @@ header p {
   text-align: center;
   color: var(--text-muted);
   padding: 40px;
+}
 
 /* ==========================================
-MULTI-CRITERIA FILTER TABS
-========================================== */
-
-}
-.filter-dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: var(--bg-card);
-  padding: 16px 20px;
-  border-radius: 12px;
-  border: 1px solid var(--glass-border);
-  margin-bottom: 35px;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.filter-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  width: 110px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.filter-btn {
-  background: #1f2937;
-  color: var(--text-muted);
-  border: 1px solid var(--glass-border);
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-btn:hover {
-  color: #ffffff;
-  border-color: var(--text-muted);
-}
-
-.filter-btn.active {
-  background: linear-gradient(135deg, var(--brand-green) 0%, #059669 100%);
-  color: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-}
-
-/*========================================== */
-FLOATING POPDOWN SUGGESTIONS
-/*========================================== */
-.suggestions-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #111827; /* Deep card dark fill */
-  border: 1px solid var(--glass-border);
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-  max-height: 250px;
-  overflow-y: auto;
-  z-index: 999;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-}
-
-.suggestions-dropdown.hidden {
-  display: none;
-}
-
-.suggestion-item {
-  padding: 12px 16px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 0.15s ease;
-}
-
-.suggestion-item:last-child {
-  border-bottom: none;
-}
-
-.suggestion-item:hover {
-  background: #1f2937; /* Lighter hover highlight tracking row */
-}
-
-.suggestion-title {
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.suggestion-meta {
-  font-size: 0.75rem;
-  color: var(--brand-green);
-  background: rgba(16, 185, 129, 0.1);
-  padding: 2px 8px;
-  border-radius: 20px;
-  text-transform: uppercase;
+   8. RESPONSIVE LAYOUT MEDIA GATES
+   ========================================== */
+@media (max-width: 768px) {
+  .app-branding-container {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  .brand-identity-block {
+    text-align: center;
+  }
+  .search-bar-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
 }
