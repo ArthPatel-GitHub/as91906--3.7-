@@ -10,49 +10,46 @@
 </head>
 <body>
 
-  <div class="container">
-    
-    <!-- Unified Top Branding & Search Bar Alignment Row -->
-    <header class="app-branding-container">
-      
-      <!-- Left Column Area: Branding Identity -->
-      <div class="brand-identity-block">
-        <h1>Rathkeale College</h1>
-        <p>Song Portal</p>
-      </div>
+  <header class="app-branding-container">
+  
+  <!-- Left Column Area: Branding Identity -->
+  <div class="brand-identity-block">
+    <h1>Rathkeale College</h1>
+    <p>Song Portal</p>
+  </div>
 
-      <!-- Right Column Area: SINGLE Operational Search Field Wrapper -->
-      <div class="search-bar-wrapper">
-        <input type="text" id="search-input" placeholder="Search titles or contexts..." autocomplete="off" />
-        <div id="search-suggestions-box" class="suggestions-dropdown hidden"></div>
-      </div>
+  <!-- Right Column Area: Gated Search Field Wrapper -->
+  <div class="search-bar-wrapper">
+    <input type="text" id="search-input" placeholder="Search titles or contexts..." autocomplete="off" />
+    <div id="search-suggestions-box" class="suggestions-dropdown hidden"></div>
+  </div>
 
-    </header>
+</header>
 
-    <!-- Calendar Target Widget -->
     <div class="widget">
       <div class="widget-title">Today's Practice Target</div>
       <div id="schedule-text" class="widget-text">Checking calendar schedule...</div>
     </div>
 
-    <!-- REWORKED: High-Accessibility Pill Filter Panel Options -->
-    <div class="filter-dashboard">
-      <div class="filter-group">
-        <span class="filter-label">Classification</span>
-        <button id="filter-all-type" class="filter-btn active">All Tracks</button>
-        <button id="filter-hymn" class="filter-btn">Hymns</button>
-        <button id="filter-anthem" class="filter-btn">Anthems</button>
-      </div>
-      
-      <div class="filter-group">
-        <span class="filter-label">Track Length</span>
-        <button id="filter-all-len" class="filter-btn active">All Durations</button>
-        <button id="filter-short" class="filter-btn">Short (Under 3 mins)</button>
-        <button id="filter-long" class="filter-btn">Extended (3+ mins)</button>
-      </div>
-    </div>
+    <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search catalogue by song title or classification..." />
 
-    <!-- HERO ZONE: NOW PLAYING DEPLOYMENT -->
+  <!-- REWORKED: High-Accessibility Filter Panel Options -->
+<!-- REWORKED: High-Accessibility Filter Panel Options -->
+<div class="filter-dashboard">
+  <div class="filter-group">
+    <span class="filter-label">Classification</span>
+    <button id="filter-all-type" class="filter-btn active">All Tracks</button>
+    <button id="filter-hymn" class="filter-btn">Hymns</button>
+    <button id="filter-anthem" class="filter-btn">Anthems</button>
+  </div>
+  
+  <div class="filter-group">
+    <span class="filter-label">Track Length</span>
+    <button id="filter-all-len" class="filter-btn active">All Durations</button>
+    <button id="filter-short" class="filter-btn">Short (Under 3 mins)</button>
+    <button id="filter-long" class="filter-btn">Extended (3+ mins)</button>
+  </div>
+</div>
     <div class="hero-layout-zone">
       <div class="column-title">Now Playing Station</div>
       <div id="player-container">
@@ -62,7 +59,6 @@
       </div>
     </div>
 
-    <!-- LOWER GRID ZONE: SONGS LIST CATALOGUE -->
     <div class="catalogue-layout-zone">
       <div class="column-title">Song Catalogue Collection</div>
       <div id="songs-container"></div>

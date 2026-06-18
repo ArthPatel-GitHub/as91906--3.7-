@@ -71,7 +71,7 @@ body {
 /* SEARCH INPUT CONTROLS */
 .search-bar-wrapper {
   flex-grow: 1; 
-  max-width: 800px; 
+  max-width: NONE; 
   position: relative;
 }
 
@@ -391,4 +391,177 @@ body {
     width: 100%;
     max-width: 100%;
   }
+}
+/* ==========================================
+   9. LYRICS LEARNING MODULE
+   ========================================== */
+.lyrics-module-container {
+  margin-top: 25px;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  background: rgba(3, 7, 18, 0.4);
+  overflow: hidden;
+  box-shadow: inset 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.lyrics-tab-row {
+  display: flex;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.lyrics-tab {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lyrics-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.lyrics-tab.active {
+  color: #ffffff;
+  background: rgba(16, 185, 129, 0.1); 
+  border-bottom-color: var(--brand-green);
+}
+
+.lyrics-content-area {
+  padding: 30px 24px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Learning Controls */
+.learning-controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  align-items: center;
+}
+
+.learning-progress {
+  font-family: monospace;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Line-by-Line Styles */
+.line-display {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+/* Flashcard 3D Scene */
+.flashcard-scene {
+  width: 100%;
+  max-width: 600px;
+  height: 180px;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.flashcard {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard.is-flipped {
+  transform: rotateX(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+  box-sizing: border-box;
+}
+
+.flashcard-front {
+  background: rgba(31, 41, 55, 0.8);
+  color: var(--text-muted);
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, var(--brand-green) 0%, #059669 100%);
+  color: #ffffff;
+  transform: rotateX(180deg);
+  font-size: 1.4rem;
+  font-weight: 800;
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+}
+
+.flashcard-hint-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--brand-green);
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.flashcard-hint-text {
+  font-size: 1.1rem;
+  color: #e2e8f0;
+  font-style: italic;
+}
+
+.flashcard-click-prompt {
+  margin-top: 15px;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
