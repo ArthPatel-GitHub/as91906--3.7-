@@ -33,33 +33,37 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       songsDatabase = data;
-      // High Performance Mapping: Cache indices on boot-up for instant lookups
       songsDatabase.forEach(song => songCacheMap.set(song.id, song));
       
       renderSongCatalogue(songsDatabase);
       runCalendarSelection();
       
-      if (notificationEngine) {
+      // ROUTING LOGIC: Check if we are on the player page
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedSongId = urlParams.get('song');
+      
+      if (requestedSongId && document.getElementById('player-container')) {
+        handleStreamSong(requestedSongId, true);
+      }
+
+      if (notificationEngine && !requestedSongId) {
         notificationEngine.success('Song database compiled instantly.');
       }
     })
     .catch(error => {
-      console.error('Critical System Exception Captured:', error);
+      console.error(error);
       showFallbackError();
-      if (notificationEngine) {
-        notificationEngine.error('Critical Error: Failed to fetch data streams.');
-      }
     });
 
   // HIGH-SPEED PERFORMANCE OPTIMIZATION: INPUT DEBOUNCING GATING
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     let debounceTimeoutPointer;
-    searchInput.addEventListener('input', (event) => {
+    searchInput.addEventListener('input', () => {
       clearTimeout(debounceTimeoutPointer);
       debounceTimeoutPointer = setTimeout(() => {
-        handleSearchFiltering(event);
-      }, 250); // Suppresses layout thrashing by gating execution to 250ms quiet intervals
+        executeCompoundFiltering(); // Now wired directly to the compound filter
+      }, 250); 
     });
   }
 });
@@ -111,7 +115,11 @@ function renderSongCatalogue(songsArray) {
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
     loadButton.textContent = '⚙️ Load Track';
-    loadButton.addEventListener('click', () => handleStreamSong(song.id, true));
+    
+    // FIXED: Correctly formatted event listener for multi-page routing
+    loadButton.addEventListener('click', () => {
+      window.location.href = `player.html?song=${song.id}`;
+    });
 
     cardElement.appendChild(cardTitle);
     cardElement.appendChild(cardP);
@@ -121,44 +129,23 @@ function renderSongCatalogue(songsArray) {
 }
 
 // ==========================================
-// 5. DATA FILTERING LOGIC
-// ==========================================
-function handleSearchFiltering(event) {
-  const searchString = event.target.value.toLowerCase().trim();
-  
-  const filteredSongs = songsDatabase.filter(song => {
-    return song.title.toLowerCase().includes(searchString) || 
-           song.history.toLowerCase().includes(searchString);
-  });
-
-  if (filteredSongs.length === 0 && notificationEngine) {
-    notificationEngine.error('No matching tracks found.');
-  }
-
-  renderSongCatalogue(filteredSongs);
-}
-
-// ==========================================
-// 6. PIPELINE INTERACTION: High-Speed Stream Engine
+// 5. PIPELINE INTERACTION: High-Speed Stream Engine
 // ==========================================
 function handleStreamSong(songId, shouldPushToHistory = true) {
   const playerContainer = document.getElementById('player-container');
   if (!playerContainer) return;
 
-  // Instant lookups utilizing Map data structure instead of looping arrays
   const activeSong = songCacheMap.get(songId);
   if (!activeSong) return;
 
   currentActiveSongId = songId;
 
-  // Memory Safety: Purge active thread tracking loops before instantiating new allocations
   safelyPurgeActiveIntervals();
   if (currentAudioElement) {
     currentAudioElement.pause();
     currentAudioElement = null;
   }
 
-  // Complex LIFO Stack Record Traversal tracking boundaries
   if (shouldPushToHistory) {
     const topOfStack = playbackHistoryStack[playbackHistoryStack.length - 1];
     if (topOfStack !== songId) {
@@ -172,8 +159,23 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     notificationEngine.success(`Streaming: ${activeSong.title}`);
   }
 
-  currentAudioElement = new Audio(activeSong.audioUrl);
-  currentAudioElement.autoplay = true;
+currentAudioElement = new Audio(activeSong.audioUrl);
+  
+  // Try to play automatically, but catch the browser's autoplay block
+  currentAudioElement.play().then(() => {
+    // Autoplay worked!
+  }).catch((error) => {
+    // Autoplay was blocked. Inform the user they need to click play.
+    if (notificationEngine) {
+      notificationEngine.error('Autoplay blocked by browser. Please press Play.');
+    }
+    // Set the button visually to the Play state
+    const playBtn = document.querySelector('button.btn:nth-child(2)'); // Grabs the play/pause button
+    if (playBtn) {
+      playBtn.innerHTML = '▶️ Play';
+      playBtn.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
+    }
+  });
 
   const playerBox = document.createElement('div');
   playerBox.className = 'player-box';
@@ -186,8 +188,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   trackTitle.className = 'track-heading';
   trackTitle.textContent = activeSong.title;
 
-  
-// ==========================================
+  // ==========================================
   // MULTI-MODE LYRICS LEARNING MODULE
   // ==========================================
   const lyricsModuleContainer = document.createElement('div');
@@ -199,34 +200,28 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   const lyricsContentArea = document.createElement('div');
   lyricsContentArea.className = 'lyrics-content-area';
 
-  // Parse lyrics into a clean array of lines (ignoring empty blank lines)
   const songLines = activeSong.lyrics.split('\n').map(line => line.trim()).filter(line => line.length > 0);
   
-  // State Tracking
   const modes = ['Full Lyrics', 'Line-by-Line', 'Flashcards'];
   let currentMode = 'Full Lyrics';
   let currentLineIndex = 0;
   let isCardFlipped = false;
 
-  // Build Tabs
   modes.forEach(mode => {
     const tabButton = document.createElement('button');
     tabButton.className = `lyrics-tab ${mode === currentMode ? 'active' : ''}`;
     tabButton.textContent = mode;
     tabButton.addEventListener('click', () => {
-      // Update active styling
       Array.from(lyricsTabRow.children).forEach(btn => btn.classList.remove('active'));
       tabButton.classList.add('active');
       
-      // Update state and re-render
       currentMode = mode;
-      isCardFlipped = false; // Reset flip state when changing tabs
+      isCardFlipped = false; 
       renderLyricsInterface();
     });
     lyricsTabRow.appendChild(tabButton);
   });
 
-  // Render Engine for the Lyrics Interface
   function renderLyricsInterface() {
     lyricsContentArea.innerHTML = '';
 
@@ -240,7 +235,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
       fullDisplay.textContent = activeSong.lyrics;
       lyricsContentArea.appendChild(fullDisplay);
     } 
-    
     else if (currentMode === 'Line-by-Line') {
       const lineDisplay = document.createElement('div');
       lineDisplay.className = 'line-display';
@@ -250,23 +244,18 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
       lyricsContentArea.appendChild(lineDisplay);
       lyricsContentArea.appendChild(controls);
     } 
-    
     else if (currentMode === 'Flashcards') {
-      // Scene Container
       const scene = document.createElement('div');
       scene.className = 'flashcard-scene';
 
-      // The Card
       const card = document.createElement('div');
       card.className = `flashcard ${isCardFlipped ? 'is-flipped' : ''}`;
       
-      // Clicking the card flips it
       scene.addEventListener('click', () => {
         isCardFlipped = !isCardFlipped;
         card.classList.toggle('is-flipped');
       });
 
-      // Front Face (The Hint / Previous Line)
       const frontFace = document.createElement('div');
       frontFace.className = 'flashcard-face flashcard-front';
       
@@ -286,7 +275,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
       frontFace.appendChild(hintText);
       frontFace.appendChild(clickPrompt);
 
-      // Back Face (The Answer / Current Line)
       const backFace = document.createElement('div');
       backFace.className = 'flashcard-face flashcard-back';
       backFace.textContent = songLines[currentLineIndex];
@@ -301,7 +289,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     }
   }
 
-  // Helper to create the Previous/Next buttons for learning modes
   function createLearningControls() {
     const controlsContainer = document.createElement('div');
     controlsContainer.className = 'learning-controls';
@@ -341,7 +328,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     return controlsContainer;
   }
 
-  // Initialize the first render
   renderLyricsInterface();
 
   lyricsModuleContainer.appendChild(lyricsTabRow);
@@ -363,7 +349,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   buttonRow.style.justifyContent = 'center';
   buttonRow.style.marginBottom = '20px';
 
-  // Control Node 1: LIFO Step-Back Controller
   const prevButton = document.createElement('button');
   prevButton.className = 'btn';
   prevButton.innerHTML = '⏮️ Previous';
@@ -374,7 +359,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     prevButton.addEventListener('click', handleNavigationBackwards);
   }
 
-  // Control Node 2: Programmatic Play/Pause State Switcher
   const playPauseButton = document.createElement('button');
   playPauseButton.className = 'btn';
   playPauseButton.style.background = 'linear-gradient(135deg, var(--brand-green) 0%, #059669 100%)';
@@ -391,13 +375,11 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     }
   });
 
-  // Control Node 3: Database Index Step-Forward Calculator
   const forwardButton = document.createElement('button');
   forwardButton.className = 'btn';
   forwardButton.innerHTML = 'Next ⏭️';
   forwardButton.addEventListener('click', handleNavigationForward);
 
-  // Control Node 4: Downstream Archiving Element (Download Anchor)
   const downloadButton = document.createElement('a');
   downloadButton.className = 'btn';
   downloadButton.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
@@ -411,17 +393,15 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     if (notificationEngine) notificationEngine.success('Downloading media file...');
   });
 
-  // Control Node 5: Playback Speed Controller
   const speedController = document.createElement('select');
   speedController.className = 'btn';
   speedController.style.background = 'rgba(255, 255, 255, 0.05)';
   speedController.style.border = '1px solid var(--glass-border)';
   speedController.style.color = '#ffffff';
   speedController.style.cursor = 'pointer';
-  speedController.style.appearance = 'none'; // Cleans up default browser styling
+  speedController.style.appearance = 'none'; 
   speedController.style.padding = '12px 20px';
 
-  // Define the speed options
   const speedOptions = [
     { value: 0.5, label: '0.5x (Slow)' },
     { value: 0.75, label: '0.75x' },
@@ -430,18 +410,16 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     { value: 1.5, label: '1.5x (Fast)' }
   ];
 
-  // Populate the dropdown
   speedOptions.forEach(opt => {
     const optionElement = document.createElement('option');
     optionElement.value = opt.value;
     optionElement.textContent = opt.label;
-    optionElement.style.background = '#111827'; // Matches your dark theme
+    optionElement.style.background = '#111827'; 
     optionElement.style.color = '#ffffff';
     if (opt.value === 1.0) optionElement.selected = true;
     speedController.appendChild(optionElement);
   });
 
-  // Wire up the logic to the audio element
   speedController.addEventListener('change', (event) => {
     if (currentAudioElement) {
       const newSpeed = parseFloat(event.target.value);
@@ -458,7 +436,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   buttonRow.appendChild(downloadButton);
   buttonRow.appendChild(speedController);
 
-  // PROGRESS SCRUBBING GRAPHIC GRID
   const timelineContainer = document.createElement('div');
   timelineContainer.style.display = 'flex';
   timelineContainer.style.alignItems = 'center';
@@ -485,7 +462,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   totalTimeText.style.fontFamily = 'monospace';
   totalTimeText.textContent = '0:00';
 
-  // Scrubbing Listener: Direct state virtualization mutations
   timelineSlider.addEventListener('input', () => {
     if (!currentAudioElement.duration) return;
     currentAudioElement.currentTime = (timelineSlider.value / 100) * currentAudioElement.duration;
@@ -505,7 +481,6 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 
   playerContainer.appendChild(playerBox);
 
-  // Sync polling cycles utilizing 250ms intervals
   progressUpdateInterval = setInterval(() => {
     if (!currentAudioElement || !currentAudioElement.duration) return;
     
@@ -527,7 +502,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 }
 
 // ==========================================
-// 7. COMPLEX DATA STRUCTURE POINTER LOGIC
+// 6. COMPLEX DATA STRUCTURE POINTER LOGIC
 // ==========================================
 
 function handleNavigationBackwards() {
@@ -547,7 +522,6 @@ function handleNavigationForward() {
   const currentDatabaseIndex = songsDatabase.findIndex(song => song.id === currentActiveSongId);
   let nextDatabaseIndex = currentDatabaseIndex + 1;
   
-  // Boundary Exception Guard: Roll back cleanly around to index 0 if target breaches limits
   if (nextDatabaseIndex >= songsDatabase.length) {
     nextDatabaseIndex = 0; 
   }
@@ -557,7 +531,7 @@ function handleNavigationForward() {
 }
 
 // ==========================================
-// 8. GARBAGE DISPOSAL & EXCEPTION CLEANING
+// 7. GARBAGE DISPOSAL & EXCEPTION CLEANING
 // ==========================================
 
 function safelyPurgeActiveIntervals() {
@@ -573,11 +547,12 @@ function showFallbackError() {
   container.innerHTML = `<div class="error-fallback-box">System Exception: Connection to song bank failed.</div>`;
 }
 
-// Active Filter State Vectors
-let activeTypeFilter = 'all'; // Can be: 'all', 'hymn', 'anthem'
-let activeLengthFilter = 'all'; // Can be: 'all', 'short', 'long'
+// ==========================================
+// 8. DATA FILTERING LOGIC
+// ==========================================
 
-// Filter Button Event Wire-up
+let activeTypeFilter = 'all'; 
+let activeLengthFilter = 'all'; 
 
 const filterBindings = [
   { id: 'filter-all-type', type: 'type', value: 'all' },
@@ -592,41 +567,32 @@ filterBindings.forEach(binding => {
   const btn = document.getElementById(binding.id);
   if (btn) {
     btn.addEventListener('click', () => {
-      // Manage active visual tab switching states
       btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
-      // Update data variables
       if (binding.type === 'type') activeTypeFilter = binding.value;
       if (binding.type === 'length') activeLengthFilter = binding.value;
       
-      // Re-trigger the filtering logic immediately using current search text
       executeCompoundFiltering();
     });
   }
 });
-
-// Compound Multi-Criteria Filter Matrix
 
 function executeCompoundFiltering() {
   const searchInput = document.getElementById('search-input');
   const searchString = searchInput ? searchInput.value.toLowerCase().trim() : '';
   
   const filteredSongs = songsDatabase.filter(song => {
-    // Stage 1: Text Search Evaluation Gate
     const matchesText = song.title.toLowerCase().includes(searchString) || 
                         song.history.toLowerCase().includes(searchString);
                         
-    // Stage 2: Classification Evaluation Gate (Assumes your json rows have a .type field)
     const matchesType = (activeTypeFilter === 'all') || 
                         (song.type && song.type.toLowerCase() === activeTypeFilter);
                         
-    // Stage 3: Duration Evaluation Gate (Assumes your json rows have a .durationInSeconds field)
     let matchesLength = true;
     if (activeLengthFilter === 'short') matchesLength = (song.durationInSeconds < 180);
     if (activeLengthFilter === 'long') matchesLength = (song.durationInSeconds >= 180);
     
-    // Return true ONLY if the song clears all three conditional bounds simultaneously
     return matchesText && matchesType && matchesLength;
   });
 

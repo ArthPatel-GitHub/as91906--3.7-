@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Contact - Rathkeale College Song Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <nav class="main-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="player.html" class="nav-link">Player</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link active">Contact</a>
+    </nav>
+
+    <div class="widget">
+      <h2 class="column-title">Song Requests & Feedback</h2>
+      <!-- We replaced the onsubmit alert with a real action URL -->
+      <form action="https://formsubmit.co/arthtanmaypatel@gmail.com" method="POST">
+        
+        <!-- This hidden input tells FormSubmit the email subject line -->
+        <input type="hidden" name="_subject" value="New Rathkeale Song Portal Request">
+        
+        <div class="form-group">
+          <label>Your Name</label>
+          <!-- Notice we added name="name" to tell the postman what this data is -->
+          <input type="text" name="name" placeholder="Enter your name" required />
+        </div>
+        
+        <div class="form-group">
+          <label>What is your request?</label>
+          <select name="request_type" class="btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.2);">
+            <option>Add a missing song</option>
+            <option>Report an audio issue</option>
+            <option>Suggest an app feature</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Additional Information</label>
+          <textarea name="details" rows="4" placeholder="Provide details here..." required></textarea>
+        </div>
+        
+        <button type="submit" class="btn">Submit Request</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
