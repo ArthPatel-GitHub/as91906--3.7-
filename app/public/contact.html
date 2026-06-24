@@ -9,6 +9,7 @@
   <div class="container">
     <nav class="main-nav">
       <a href="index.html" class="nav-link">Home</a>
+      <a href="songs.html" class="nav-link">Catalogue</a>
       <a href="player.html" class="nav-link">Player</a>
       <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link active">Contact</a>
@@ -26,6 +27,25 @@
           <label>Your Name</label>
           <!-- Notice we added name="name" to tell the postman what this data is -->
           <input type="text" name="name" placeholder="Enter your name" required />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="user-id" style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--brand-green);">
+            Identification
+          </label>
+          <input 
+            type="text" 
+            id="user-id" 
+            name="user-id" 
+            placeholder="Student ID (e.g: 123456) or Staff Initials (e.g: ABC)" 
+            pattern="^(\d{6,8}|[A-Za-z]{3})$"
+            title="Please enter a 6 to 8 digit Student ID, or 3-letter Staff Initials."
+            required
+            style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: white; font-family: inherit;"
+          />
+          <small style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px; display: block;">
+            Students: Enter your 6-8 digit ID. Staff: Enter your 3-letter initials.
+          </small>
         </div>
         
         <div class="form-group">

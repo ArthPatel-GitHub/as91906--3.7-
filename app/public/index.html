@@ -4,42 +4,48 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Home - Rathkeale College Song Portal</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <nav class="main-nav">
       <a href="index.html" class="nav-link active">Home</a>
+      <a href="songs.html" class="nav-link">Catalogue</a>
       <a href="player.html" class="nav-link">Player</a>
       <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link">Contact</a>
     </nav>
 
-    <header class="app-branding-container">
+    <header class="app-branding-container" style="text-align: center; margin-bottom: 40px;">
       <div class="brand-identity-block">
         <h1>Rathkeale College</h1>
-        <p>Song Portal</p>
-      </div>
-      <div class="search-bar-wrapper">
-        <input type="text" id="search-input" placeholder="Search titles or contexts..." autocomplete="off" />
+        <p>Song & Tradition Portal</p>
       </div>
     </header>
 
-    <div class="widget">
+    <div class="widget" style="margin-bottom: 40px;">
       <div class="widget-title">Today's Practice Target</div>
-      <div id="schedule-text" class="widget-text">Checking calendar schedule...</div>
+      <div id="schedule-text" class="widget-text" style="font-size: 1.2rem; color: var(--brand-green);">Checking calendar schedule...</div>
     </div>
 
-    <div class="filter-dashboard">
-      </div>
+    <div class="dashboard-grid">
+      <a href="songs.html" class="dashboard-card">
+        <h2>📚 Song Catalogue</h2>
+        <p>Browse, search, and filter the complete collection of school music.</p>
+      </a>
+      
+      <a href="player.html" class="dashboard-card">
+        <h2>🎧 Active Player</h2>
+        <p>Jump back into your current streaming session and flashcards.</p>
+      </a>
 
-    <div class="catalogue-layout-zone">
-      <div class="column-title">Song Catalogue Collection</div>
-      <div id="songs-container"></div>
+      <a href="contact.html" class="dashboard-card">
+        <h2>✉️ Requests</h2>
+        <p>Notice a missing song or audio issue? Send a quick request.</p>
+      </a>
     </div>
+
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
   <script src="/App.js"></script>
 </body>
 </html>

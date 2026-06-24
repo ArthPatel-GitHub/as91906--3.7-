@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catalogue - Rathkeale College Song Portal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <nav class="main-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="songs.html" class="nav-link active">Catalogue</a>
+      <a href="player.html" class="nav-link">Player</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+
+    <header class="app-branding-container">
+      <div class="brand-identity-block">
+        <h1>Song Library</h1>
+        <p>Browse and filter the complete collection</p>
+      </div>
+      <div class="search-bar-wrapper">
+        <input type="text" id="search-input" placeholder="Search titles or contexts..." autocomplete="off" />
+      </div>
+    </header>
+
+    <div class="filter-dashboard" style="background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); margin-bottom: 25px;">
+      <div class="filter-group" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+        <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: bold; width: 60px;">TYPE:</span>
+        <button class="btn filter-btn active" id="filter-all-type" style="padding: 5px 15px; border-radius: 20px;">All Types</button>
+        <button class="btn filter-btn" id="filter-hymn" style="padding: 5px 15px; border-radius: 20px;">Hymns</button>
+        <button class="btn filter-btn" id="filter-anthem" style="padding: 5px 15px; border-radius: 20px;">Anthems</button>
+      </div>
+      <div class="filter-group" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: bold; width: 60px;">LENGTH:</span>
+        <button class="btn filter-btn active" id="filter-all-len" style="padding: 5px 15px; border-radius: 20px;">Any Length</button>
+        <button class="btn filter-btn" id="filter-short" style="padding: 5px 15px; border-radius: 20px;">Short (< 3m)</button>
+        <button class="btn filter-btn" id="filter-long" style="padding: 5px 15px; border-radius: 20px;">Long (3m+)</button>
+      </div>
+    </div>
+
+    <div class="catalogue-layout-zone">
+      <div id="songs-container"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="/App.js"></script>
+</body>
+</html>
