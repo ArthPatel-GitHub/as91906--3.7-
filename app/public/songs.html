@@ -27,24 +27,27 @@
       </div>
     </header>
 
-    <div class="filter-dashboard" style="background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); margin-bottom: 25px;">
-      <div class="filter-group" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
-        <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: bold; width: 60px;">TYPE:</span>
-        <button class="btn filter-btn active" id="filter-all-type" style="padding: 5px 15px; border-radius: 20px;">All Types</button>
-        <button class="btn filter-btn" id="filter-hymn" style="padding: 5px 15px; border-radius: 20px;">Hymns</button>
-        <button class="btn filter-btn" id="filter-anthem" style="padding: 5px 15px; border-radius: 20px;">Anthems</button>
+    <div class="filter-dashboard">
+      <div class="filter-group">
+        <span class="filter-label">TYPE:</span>
+        <button class="btn filter-btn active" id="filter-all-type">All Types</button>
+        <button class="btn filter-btn" id="filter-hymn">Hymns</button>
+        <button class="btn filter-btn" id="filter-anthem">Anthems</button>
       </div>
-      <div class="filter-group" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-        <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: bold; width: 60px;">LENGTH:</span>
-        <button class="btn filter-btn active" id="filter-all-len" style="padding: 5px 15px; border-radius: 20px;">Any Length</button>
-        <button class="btn filter-btn" id="filter-short" style="padding: 5px 15px; border-radius: 20px;">Short (< 3m)</button>
-        <button class="btn filter-btn" id="filter-long" style="padding: 5px 15px; border-radius: 20px;">Long (3m+)</button>
+      <div class="filter-group">
+        <span class="filter-label">LENGTH:</span>
+        <button class="btn filter-btn active" id="filter-all-len">Any Length</button>
+        <button class="btn filter-btn" id="filter-short">Short (< 3m)</button>
+        <button class="btn filter-btn" id="filter-long">Long (3m+)</button>
       </div>
     </div>
 
     <div class="catalogue-layout-zone">
       <div id="songs-container"></div>
     </div>
+    <footer class="app-footer">
+      <p>&copy; 2026 Rathkeale College Song Portal. All rights reserved.</p>
+    </footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>

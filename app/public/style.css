@@ -656,3 +656,151 @@ body {
   border-color: var(--brand-green);
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
+/* ==========================================
+   FILTER DASHBOARD (songs.html)
+   ========================================== */
+.filter-dashboard {
+  background: var(--bg-card);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  margin-bottom: 25px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: bold;
+  width: 60px;
+}
+
+.filter-btn {
+  padding: 5px 15px;
+  border-radius: 20px;
+}
+
+
+/* ==========================================
+   PLAYER EMPTY STATE (player.html)
+   ========================================== */
+.player-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.player-empty-state {
+  text-align: center;
+  padding: 80px 40px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 2px dashed var(--glass-border);
+  margin-top: 40px;
+}
+
+.player-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.player-empty-title {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.player-empty-text {
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.player-empty-btn {
+  background: linear-gradient(135deg, var(--brand-green) 0%, #059669 100%);
+  text-decoration: none;
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: bold;
+  color: white;
+}
+
+
+/* ==========================================
+   FORM CONTROLS (contact.html & Home)
+   ========================================== */
+.home-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.home-widget {
+  margin-bottom: 40px;
+}
+
+.home-widget-text {
+  font-size: 1.2rem;
+  color: var(--brand-green);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--brand-green);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  color: white;
+  font-family: inherit;
+}
+
+.form-help-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  display: block;
+}
+/* Styling for the Turnaround & Maintenance Alerts */
+.notice-box {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  color: #fcd34d;
+  line-height: 1.6;
+}
+
+.rules-list {
+  margin-top: 15px;
+  padding-left: 20px;
+}
+
+.rules-list li {
+  margin-bottom: 12px;
+  color: var(--text-muted);
+}
+
+.rules-list strong {
+  color: #ffffff;
+}

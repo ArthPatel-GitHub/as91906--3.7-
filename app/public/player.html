@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Song Player</title>
-  
-  <link rel="stylesheet" href="style.css">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Player - Rathkeale College Song Portal</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <nav style="padding: 20px;">
-    <a href="index.html" class="btn">← Back to Catalogue</a>
-  </nav>
-
-  <div id="player-container"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-  
-  <script src="/App.js"></script> 
-
-  <nav class="main-nav">
+  <div class="container">
+    <nav class="main-nav">
       <a href="index.html" class="nav-link">Home</a>
       <a href="songs.html" class="nav-link">Catalogue</a>
-      <a href="player.html" class="nav-link active">Player</a> <a href="about.html" class="nav-link">About</a>
+      <a href="player.html" class="nav-link active">Player</a>
+      <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link">Contact</a>
     </nav>
 
+    <div id="player-container" class="player-wrapper">
+      <div class="player-empty-state">
+        <div class="player-empty-icon">🎧</div>
+        <h2 class="player-empty-title">No Track Selected</h2>
+        <p class="player-empty-text">
+          The player is currently empty. Head over to the song catalogue to choose a track, stream audio, and access the lyrics flashcards.
+        </p>
+        <a href="songs.html" class="player-empty-btn">📚 Browse Catalogue</a>
+      </div>
+      <footer class="app-footer">
+      <p>&copy; 2026 Rathkeale College Song Portal. All rights reserved.</p>
+    </footer>
+    </div>
+  </div>
+  <script src="/App.js"></script>
 </body>
 </html>

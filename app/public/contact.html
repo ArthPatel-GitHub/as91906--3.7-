@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact - Rathkeale College Song Portal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -15,56 +17,54 @@
       <a href="contact.html" class="nav-link active">Contact</a>
     </nav>
 
-    <div class="widget">
-      <h2 class="column-title">Song Requests & Feedback</h2>
-      <!-- We replaced the onsubmit alert with a real action URL -->
-      <form action="https://formsubmit.co/arthtanmaypatel@gmail.com" method="POST">
-        
-        <!-- This hidden input tells FormSubmit the email subject line -->
-        <input type="hidden" name="_subject" value="New Rathkeale Song Portal Request">
-        
-        <div class="form-group">
-          <label>Your Name</label>
-          <!-- Notice we added name="name" to tell the postman what this data is -->
-          <input type="text" name="name" placeholder="Enter your name" required />
-        </div>
+    <header class="app-branding-container">
+      <div class="brand-identity-block">
+        <h1>Submit a Request</h1>
+        <p>Report broken audio, missing lyrics, or suggest new tracks.</p>
+      </div>
+    </header>
 
-        <div class="form-group" style="margin-bottom: 20px;">
-          <label for="user-id" style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--brand-green);">
-            Identification
-          </label>
-          <input 
-            type="text" 
-            id="user-id" 
-            name="user-id" 
-            placeholder="Student ID (e.g: 123456) or Staff Initials (e.g: ABC)" 
-            pattern="^(\d{6,8}|[A-Za-z]{3})$"
-            title="Please enter a 6 to 8 digit Student ID, or 3-letter Staff Initials."
-            required
-            style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: white; font-family: inherit;"
-          />
-          <small style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px; display: block;">
-            Students: Enter your 6-8 digit ID. Staff: Enter your 3-letter initials.
-          </small>
-        </div>
-        
-        <div class="form-group">
-          <label>What is your request?</label>
-          <select name="request_type" class="btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.2);">
-            <option>Add a missing song</option>
-            <option>Report an audio issue</option>
-            <option>Suggest an app feature</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label>Additional Information</label>
-          <textarea name="details" rows="4" placeholder="Provide details here..." required></textarea>
-        </div>
-        
-        <button type="submit" class="btn">Submit Request</button>
-      </form>
+    <!-- Highlighted 1-3 Day Turnaround Notice Box -->
+    <div class="notice-box" style="margin-bottom: 25px;">
+      <p style="margin: 0;">
+        ⏳ <strong>Processing Notice:</strong> To ensure data accuracy, all submitted fixes, technical bug reports, or song additions are manually processed. Updates typically take <strong>1 to 3 days</strong> to reflect live on the portal.
+      </p>
     </div>
+
+    <!-- Form configured for traditional FormSubmit Redirect -->
+    <form action="https://formsubmit.co/arthtanmaypatel@gmail.com" method="POST" class="request-form">
+      <div class="form-group">
+        <label for="user-name" class="form-label">Full Name</label>
+        <input type="text" id="user-name" name="user-name" class="form-input" placeholder="e.g. John Smith" required />
+      </div>
+
+      <div class="form-group">
+        <label for="user-id" class="form-label">Identification</label>
+        <input 
+          type="text" 
+          id="user-id" 
+          name="user-id" 
+          class="form-input"
+          placeholder="Student ID (e.g: 123456) or Staff Initials (e.g: ABC)" 
+          pattern="^(\d{6,8}|[A-Za-z]{3})$"
+          title="Please enter a 6 to 8 digit Student ID, or 3-letter Staff Initials."
+          required
+        />
+        <small class="form-help-text">
+          Students: Enter your 6-8 digit ID. Staff: Enter your 3-letter initials.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="request-message" class="form-label">Your Message / Request</label>
+        <textarea id="request-message" name="request-message" class="form-input" rows="5" placeholder="Tell us what needs changing or adding..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn submit-btn">Submit Request</button>
+    </form>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="/App.js"></script>
 </body>
 </html>

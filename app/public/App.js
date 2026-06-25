@@ -159,7 +159,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     notificationEngine.success(`Streaming: ${activeSong.title}`);
   }
 
-currentAudioElement = new Audio(activeSong.audioUrl);
+  currentAudioElement = new Audio(activeSong.audioUrl);
   
   // Try to play automatically, but catch the browser's autoplay block
   currentAudioElement.play().then(() => {
@@ -539,12 +539,6 @@ function safelyPurgeActiveIntervals() {
     clearInterval(progressUpdateInterval);
     progressUpdateInterval = null;
   }
-}
-
-function showFallbackError() {
-  const container = document.getElementById('songs-container');
-  if (!container) return;
-  container.innerHTML = `<div class="error-fallback-box">System Exception: Connection to song bank failed.</div>`;
 }
 
 // ==========================================
