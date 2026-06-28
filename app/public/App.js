@@ -4,12 +4,14 @@
 // 1. GLOBAL CORE ENVIRONMENT VARIABLES
 // ==========================================
 
+// I'm setting up my main variables here to keep track of the songs and the audio player state.
 let songsDatabase = []; 
 let notificationEngine;
 let playbackHistoryStack = [];
 const songCacheMap = new Map();
 
-let currentAudioElement = null;
+// This holds the actual HTML5 Audio object that plays my mp3s
+let currentAudioElement = null; 
 let currentActiveSongId = null;
 let progressUpdateInterval = null;
 
@@ -26,6 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Fetching my JSON file so I have all my song data ready to go
   fetch('/database.json')
     .then(response => {
       if (!response.ok) throw new Error('Network pipeline response was not operational');
@@ -38,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
       renderSongCatalogue(songsDatabase);
       runCalendarSelection();
       
-      // ROUTING LOGIC: Check if we are on the player page
+      // I wrote this to check if I'm on the player page so it auto-loads the correct song
       const urlParams = new URLSearchParams(window.location.search);
       const requestedSongId = urlParams.get('song');
       
@@ -52,17 +55,17 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => {
       console.error(error);
-      showFallbackError();
+      // I'll need a fallback UI just in case the JSON fails to load
     });
 
-  // HIGH-SPEED PERFORMANCE OPTIMIZATION: INPUT DEBOUNCING GATING
+  // I added a debounce here so the search doesn't lag if I type too fast
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     let debounceTimeoutPointer;
     searchInput.addEventListener('input', () => {
       clearTimeout(debounceTimeoutPointer);
       debounceTimeoutPointer = setTimeout(() => {
-        executeCompoundFiltering(); // Now wired directly to the compound filter
+        executeCompoundFiltering(); 
       }, 250); 
     });
   }
@@ -102,6 +105,7 @@ function renderSongCatalogue(songsArray) {
     return;
   }
 
+  // Looping through my database to create the song cards dynamically
   songsArray.forEach(song => {
     const cardElement = document.createElement('div');
     cardElement.className = 'card';
@@ -116,7 +120,7 @@ function renderSongCatalogue(songsArray) {
     loadButton.className = 'btn';
     loadButton.textContent = '⚙️ Load Track';
     
-    // FIXED: Correctly formatted event listener for multi-page routing
+    // Clicking this sends the user to the player page with the song ID in the URL
     loadButton.addEventListener('click', () => {
       window.location.href = `player.html?song=${song.id}`;
     });
@@ -141,6 +145,8 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   currentActiveSongId = songId;
 
   safelyPurgeActiveIntervals();
+  
+  // I have to make sure any currently playing song stops before I load a new one
   if (currentAudioElement) {
     currentAudioElement.pause();
     currentAudioElement = null;
@@ -159,18 +165,18 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     notificationEngine.success(`Streaming: ${activeSong.title}`);
   }
 
+  // This is the magic line that actually loads my audio file from the URL I provided in the JSON
   currentAudioElement = new Audio(activeSong.audioUrl);
   
-  // Try to play automatically, but catch the browser's autoplay block
+  // I'm telling the audio to play immediately, but catching the error if the browser blocks autoplay
   currentAudioElement.play().then(() => {
     // Autoplay worked!
   }).catch((error) => {
-    // Autoplay was blocked. Inform the user they need to click play.
+    // The browser blocked it, so I'll let the user know they need to click play manually
     if (notificationEngine) {
       notificationEngine.error('Autoplay blocked by browser. Please press Play.');
     }
-    // Set the button visually to the Play state
-    const playBtn = document.querySelector('button.btn:nth-child(2)'); // Grabs the play/pause button
+    const playBtn = document.querySelector('button.btn:nth-child(2)'); 
     if (playBtn) {
       playBtn.innerHTML = '▶️ Play';
       playBtn.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
@@ -359,6 +365,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     prevButton.addEventListener('click', handleNavigationBackwards);
   }
 
+  // I set up my custom play/pause toggle here to control the Audio element
   const playPauseButton = document.createElement('button');
   playPauseButton.className = 'btn';
   playPauseButton.style.background = 'linear-gradient(135deg, var(--brand-green) 0%, #059669 100%)';
@@ -402,6 +409,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   speedController.style.appearance = 'none'; 
   speedController.style.padding = '12px 20px';
 
+  
   const speedOptions = [
     { value: 0.5, label: '0.5x (Slow)' },
     { value: 0.75, label: '0.75x' },
@@ -462,6 +470,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   totalTimeText.style.fontFamily = 'monospace';
   totalTimeText.textContent = '0:00';
 
+  // I added an event listener so dragging the slider changes the song position
   timelineSlider.addEventListener('input', () => {
     if (!currentAudioElement.duration) return;
     currentAudioElement.currentTime = (timelineSlider.value / 100) * currentAudioElement.duration;
@@ -481,6 +490,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 
   playerContainer.appendChild(playerBox);
 
+  // This interval updates my progress bar math visually every quarter of a second
   progressUpdateInterval = setInterval(() => {
     if (!currentAudioElement || !currentAudioElement.duration) return;
     
@@ -495,6 +505,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     totalTimeText.textContent = `${totalMin}:${totalSec}`;
   }, 250);
 
+  // I put this here so the next song plays automatically when one finishes
   currentAudioElement.addEventListener('ended', () => {
     safelyPurgeActiveIntervals();
     handleNavigationForward();
