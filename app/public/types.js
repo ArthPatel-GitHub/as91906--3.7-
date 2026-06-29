@@ -203,6 +203,120 @@ function isValidRepeatMode(mode) {
   return REPEAT_MODES.includes(mode);
 }
 
+// ==========================================
+// 4. THE User TYPE
+// ==========================================
+// Describes a valid signup/login submission. Same idea as Song:
+// check the shape and contents are sensible BEFORE any of it is
+// trusted by the rest of the app (UserAccount class, storage, etc).
+//
+// NOTE ON SCOPE: this app only ever stores accounts in the
+// current browser's own localStorage (see auth.js). There is no
+// shared server, so this is a self-contained demo of the
+// signup/login pattern using fictional seeded accounts, not a
+// system that collects or holds real students' personal details.
+
+class UserValidationError extends Error {
+  constructor(message, field) {
+    super(message);
+    this.name = 'UserValidationError';
+    this.field = field;
+  }
+}
+
+// Matches the same identification pattern already used in
+// contact.html: a 6-8 digit student ID, or 3 letter staff initials.
+const ID_PATTERN = /^(\d{6,8}|[A-Za-z]{3})$/;
+
+// A reasonably standard "looks like an email" check. Not aiming
+// to catch every edge case RFC 5322 allows, just obviously wrong input.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const MIN_PASSWORD_LENGTH = 8;
+
+/**
+ * Validates a raw signup submission (name, id, email, password)
+ * and returns a clean, validated object ready to be turned into
+ * a stored account by the UserAccount class.
+ *
+ * Throws UserValidationError with a field-specific message if
+ * anything is wrong, so the signup form can show the user exactly
+ * what to fix.
+ *
+ * @param {object} rawData - { fullName, idOrInitials, email, password }
+ * @returns {object} a validated signup object
+ */
+function createUserSignupRequest(rawData) {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new UserValidationError('Signup data is not a valid object.');
+  }
+
+  const { fullName, idOrInitials, email, password } = rawData;
+
+  if (typeof fullName !== 'string' || fullName.trim().length === 0) {
+    throw new UserValidationError('Full name is required.', 'fullName');
+  }
+
+  if (typeof idOrInitials !== 'string' || !ID_PATTERN.test(idOrInitials.trim())) {
+    throw new UserValidationError(
+      'ID must be a 6-8 digit Student ID, or 3-letter Staff Initials.',
+      'idOrInitials'
+    );
+  }
+
+  if (typeof email !== 'string' || !EMAIL_PATTERN.test(email.trim())) {
+    throw new UserValidationError('Please enter a valid email address.', 'email');
+  }
+
+  if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH) {
+    throw new UserValidationError(
+      `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+      'password'
+    );
+  }
+
+  // Staff vs student is inferred the same way the ID itself is
+  // validated: pure letters = staff initials, digits = student ID.
+  const isStaffAccount = /^[A-Za-z]{3}$/.test(idOrInitials.trim());
+
+  return {
+    fullName: fullName.trim(),
+    idOrInitials: idOrInitials.trim(),
+    email: email.trim().toLowerCase(),
+    password, // not trimmed - a password's whitespace is meaningful
+    role: isStaffAccount ? 'staff' : 'student'
+  };
+}
+
+/**
+ * Validates a login attempt has the minimum shape needed to even
+ * attempt a lookup (we don't know yet if the account exists or
+ * the password is correct - that's the UserAccount class's job).
+ *
+ * @param {object} rawData - { idOrEmail, password }
+ * @returns {object} a validated login request
+ */
+function createLoginRequest(rawData) {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new UserValidationError('Login data is not a valid object.');
+  }
+
+  const { idOrEmail, password } = rawData;
+
+  if (typeof idOrEmail !== 'string' || idOrEmail.trim().length === 0) {
+    throw new UserValidationError('Student ID, Staff Initials, or email is required.', 'idOrEmail');
+  }
+
+  if (typeof password !== 'string' || password.length === 0) {
+    throw new UserValidationError('Password is required.', 'password');
+  }
+
+  return {
+    idOrEmail: idOrEmail.trim().toLowerCase(),
+    password
+  };
+}
+
 // Export everything the rest of the app needs.
 // (No module bundler in this project, so these attach to window
 // for App.js / player.js to use, the same way the rest of the
@@ -213,3 +327,6 @@ window.createSongDatabase = createSongDatabase;
 window.createPlaybackState = createPlaybackState;
 window.isValidRepeatMode = isValidRepeatMode;
 window.REPEAT_MODES = REPEAT_MODES;
+window.UserValidationError = UserValidationError;
+window.createUserSignupRequest = createUserSignupRequest;
+window.createLoginRequest = createLoginRequest;

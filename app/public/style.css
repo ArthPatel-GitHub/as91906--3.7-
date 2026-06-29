@@ -888,3 +888,117 @@ body {
 .rules-list strong {
   color: #ffffff;
 }
+/* ==========================================
+   11. AUTH WIDGET (nav-bar login indicator)
+   ========================================== */
+
+/* Pushes the widget to the end of the nav row, after the page links */
+.main-nav {
+  position: relative;
+}
+
+#auth-widget {
+  margin-left: auto;
+}
+
+.auth-widget-wrapper {
+  position: relative;
+}
+
+.auth-widget-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 30px;
+  padding: 8px 16px 8px 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.auth-widget-trigger:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.auth-widget-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.auth-widget-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-green) 0%, #059669 100%);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.auth-widget-label {
+  white-space: nowrap;
+}
+
+.auth-widget-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  background: #111827;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.auth-widget-dropdown.hidden {
+  display: none;
+}
+
+.auth-widget-dropdown-name {
+  margin: 0 0 4px 0;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.auth-widget-dropdown-meta {
+  margin: 0 0 14px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth-widget-signout {
+  width: 100%;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand-red) 0%, #b91c1c 100%);
+}
+
+/* Stack the nav vertically on small screens so the auth widget
+   doesn't get squeezed against the page links */
+@media (max-width: 768px) {
+  .main-nav {
+    flex-wrap: wrap;
+  }
+  #auth-widget {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}

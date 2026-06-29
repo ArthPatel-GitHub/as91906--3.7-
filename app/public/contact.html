@@ -6,6 +6,7 @@
   <title>Contact - Rathkeale College Song Portal</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth-widget.css" />
 </head>
 <body>
   <div class="container">
@@ -15,6 +16,8 @@
       <a href="player.html" class="nav-link">Player</a>
       <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link active">Contact</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <div id="auth-widget"></div>
     </nav>
 
     <header class="app-branding-container">
@@ -31,14 +34,30 @@
       </p>
     </div>
 
+    <!-- Shown only when logged in: confirms who the request is being submitted as -->
+    <div id="logged-in-identity-notice" class="widget" style="display: none; margin-bottom: 25px;">
+      <div class="widget-title">Submitting As</div>
+      <p class="widget-text" id="logged-in-identity-text"></p>
+    </div>
+
+    <!-- Shown only when logged out: explains the slower turnaround for unidentified requests -->
+    <div id="logged-out-notice" class="notice-box" style="margin-bottom: 25px; display: none;">
+      <p style="margin: 0;">
+        ⚠️ <strong>Not logged in:</strong> Requests submitted without an account may take longer to action,
+        since they can't be matched to an existing account. <a href="login.html" style="color: inherit; text-decoration: underline;">Log in or sign up</a> for faster handling.
+      </p>
+    </div>
+
     <!-- Form configured for traditional FormSubmit Redirect -->
-    <form action="https://formsubmit.co/arthtanmaypatel@gmail.com" method="POST" class="request-form">
-      <div class="form-group">
+    <form action="https://formsubmit.co/arthtanmaypatel@gmail.com" method="POST" class="request-form" id="contact-form">
+
+      <!-- Visible only when logged OUT - removed from the DOM entirely when logged in -->
+      <div class="form-group" id="name-field-group">
         <label for="user-name" class="form-label">Full Name</label>
-        <input type="text" id="user-name" name="user-name" class="form-input" placeholder="e.g. John Smith" required />
+        <input type="text" id="user-name" name="user-name" class="form-input" placeholder="e.g. John Smith" />
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="id-field-group">
         <label for="user-id" class="form-label">Identification</label>
         <input 
           type="text" 
@@ -48,12 +67,15 @@
           placeholder="Student ID (e.g: 123456) or Staff Initials (e.g: ABC)" 
           pattern="^(\d{6,8}|[A-Za-z]{3})$"
           title="Please enter a 6 to 8 digit Student ID, or 3-letter Staff Initials."
-          required
         />
         <small class="form-help-text">
           Students: Enter your 6-8 digit ID. Staff: Enter your 3-letter initials.
         </small>
       </div>
+
+      <!-- Hidden fields populated by JS when logged in, so FormSubmit still receives name/ID -->
+      <input type="hidden" id="hidden-user-name" name="user-name" />
+      <input type="hidden" id="hidden-user-id" name="user-id" />
 
       <div class="form-group">
         <label for="request-message" class="form-label">Your Message / Request</label>
@@ -63,8 +85,13 @@
       <button type="submit" class="btn submit-btn">Submit Request</button>
     </form>
   </div>
-  <script src="/types.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="/types.js"></script>
+  <script src="/player.js"></script>
+  <script src="/auth.js"></script>
   <script src="/App.js"></script>
+  <script src="/contact-page.js"></script>
+  <script src="/auth-widget.js"></script>
 </body>
 </html>
