@@ -1002,3 +1002,38 @@ body {
     margin-top: 10px;
   }
 }
+
+/* ==========================================
+   12. NOTYF TOAST SIZE OVERRIDE
+   ========================================== */
+/* Notyf's default toast is sized for a generic site; shrinking
+   the wrapper padding, message line-height, and icon size here
+   so it reads as a compact pill rather than a full alert banner. */
+.notyf__toast {
+  max-width: 240px;
+  border-radius: 8px;
+}
+
+.notyf__wrapper {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-left: 4px;
+}
+
+.notyf__message {
+  font-size: 0.8rem;
+  line-height: 1.3em;
+}
+
+.notyf__icon {
+  width: 16px;
+  font-size: 1em;
+  margin-right: 8px;
+}
+
+.notyf__icon--success,
+.notyf__icon--error {
+  height: 16px;
+  width: 16px;
+}

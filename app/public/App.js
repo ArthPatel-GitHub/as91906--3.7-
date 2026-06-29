@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof Notyf !== 'undefined') {
     notificationEngine = new Notyf({
       duration: 2500,
-      position: { x: 'right', y: 'top' },
+      position: { x: 'right', y: 'bottom' },
       ripple: false
     });
   }
@@ -118,7 +118,7 @@ function renderSongCatalogue(songsArray) {
 
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
-    loadButton.textContent = '⚙️ Load Track';
+    loadButton.textContent = '⚙️ Play';
     
     // Clicking this sends the user to the player page with the song ID in the URL
     loadButton.addEventListener('click', () => {
