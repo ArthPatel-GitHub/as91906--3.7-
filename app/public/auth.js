@@ -90,7 +90,7 @@ class UserAccount {
 
   /**
    * Registers a new account.
-   * @param {object} rawSignupData - { fullName, idOrInitials, email, password }
+   * @param {object} rawSignupData - { fullName, idOrInitials, email, password, securityQuestion, securityAnswer }
    * @returns {Promise<object>} the public-safe user record (no password)
    */
   async signUp(rawSignupData) {
@@ -110,6 +110,12 @@ class UserAccount {
     const salt = generateSalt();
     const passwordHash = await hashPassword(validated.password, salt);
 
+    // The security answer is hashed the same way a password is -
+    // own salt, never stored as plain text - so even someone with
+    // direct access to localStorage can't just read it off.
+    const securityAnswerSalt = generateSalt();
+    const securityAnswerHash = await hashPassword(validated.securityAnswer, securityAnswerSalt);
+
     const newUser = {
       fullName: validated.fullName,
       idOrInitials: validated.idOrInitials,
@@ -117,7 +123,10 @@ class UserAccount {
       role: validated.role,
       isAdmin: false, // demo accounts only become admin via _seedDemoAccounts
       salt,
-      passwordHash
+      passwordHash,
+      securityQuestion: validated.securityQuestion,
+      securityAnswerSalt,
+      securityAnswerHash
     };
 
     allUsers.push(newUser);
@@ -158,6 +167,136 @@ class UserAccount {
 
   logOut() {
     this._clearSession();
+  }
+
+  /**
+   * Changes the currently logged-in user's email address.
+   * @param {object} rawData - { newEmail }
+   * @returns {Promise<object>} the updated public-safe user record
+   */
+  async changeEmail(rawData) {
+    if (!this.isLoggedIn()) {
+      throw new window.UserValidationError('You must be logged in to change your email.');
+    }
+
+    const validated = window.createChangeEmailRequest(rawData);
+    const allUsers = this._loadAllUsers();
+    const currentUser = this.getCurrentUser();
+
+    const emailTakenByAnotherAccount = allUsers.some(
+      (user) => user.email === validated.newEmail && user.idOrInitials !== currentUser.idOrInitials
+    );
+    if (emailTakenByAnotherAccount) {
+      throw new window.UserValidationError('That email is already in use by another account.', 'newEmail');
+    }
+
+    const userIndex = allUsers.findIndex((user) => user.idOrInitials === currentUser.idOrInitials);
+    if (userIndex === -1) {
+      throw new window.UserValidationError('Your account could not be found.');
+    }
+
+    allUsers[userIndex].email = validated.newEmail;
+    this._saveAllUsers(allUsers);
+
+    const updatedPublicUser = this._toPublicUser(allUsers[userIndex]);
+    this._saveSession(updatedPublicUser); // keep the active session in sync with the new email
+    return updatedPublicUser;
+  }
+
+  /**
+   * Changes the currently logged-in user's password. Requires
+   * the correct current password to succeed.
+   * @param {object} rawData - { currentPassword, newPassword, confirmNewPassword }
+   */
+  async changePassword(rawData) {
+    if (!this.isLoggedIn()) {
+      throw new window.UserValidationError('You must be logged in to change your password.');
+    }
+
+    const validated = window.createChangePasswordRequest(rawData);
+    const allUsers = this._loadAllUsers();
+    const currentUser = this.getCurrentUser();
+
+    const userIndex = allUsers.findIndex((user) => user.idOrInitials === currentUser.idOrInitials);
+    if (userIndex === -1) {
+      throw new window.UserValidationError('Your account could not be found.');
+    }
+
+    const storedUser = allUsers[userIndex];
+    const attemptedCurrentHash = await hashPassword(validated.currentPassword, storedUser.salt);
+    if (attemptedCurrentHash !== storedUser.passwordHash) {
+      throw new window.UserValidationError('Current password is incorrect.', 'currentPassword');
+    }
+
+    const newSalt = generateSalt(); // fresh salt on every password change, not just every signup
+    storedUser.salt = newSalt;
+    storedUser.passwordHash = await hashPassword(validated.newPassword, newSalt);
+
+    this._saveAllUsers(allUsers);
+    return this._toPublicUser(storedUser);
+  }
+
+  // ---- Account recovery (security question) ----
+
+  /**
+   * Step 1 of recovery: looks up an account by ID or email and
+   * returns its security question, WITHOUT revealing anything
+   * else about the account (no name, no confirmation either way
+   * beyond "found" vs "not found" - kept deliberately minimal).
+   * @param {object} rawData - { idOrEmail }
+   * @returns {Promise<string>} the account's security question
+   */
+  async getSecurityQuestionForRecovery(rawData) {
+    const validated = window.createRecoveryLookupRequest(rawData);
+    const allUsers = this._loadAllUsers();
+
+    const matchedUser = allUsers.find(
+      (user) =>
+        user.idOrInitials.toLowerCase() === validated.idOrEmail ||
+        user.email === validated.idOrEmail
+    );
+
+    if (!matchedUser) {
+      throw new window.UserValidationError('No account found with that ID or email.', 'idOrEmail');
+    }
+
+    return matchedUser.securityQuestion;
+  }
+
+  /**
+   * Step 2 of recovery: verifies the security answer for the
+   * account looked up in step 1, and if correct, sets a new
+   * password.
+   * @param {object} lookupData - { idOrEmail } (same as step 1)
+   * @param {object} resetData - { securityAnswer, newPassword, confirmNewPassword }
+   */
+  async resetPasswordWithSecurityAnswer(lookupData, resetData) {
+    const validatedLookup = window.createRecoveryLookupRequest(lookupData);
+    const validatedReset = window.createRecoveryResetRequest(resetData);
+    const allUsers = this._loadAllUsers();
+
+    const userIndex = allUsers.findIndex(
+      (user) =>
+        user.idOrInitials.toLowerCase() === validatedLookup.idOrEmail ||
+        user.email === validatedLookup.idOrEmail
+    );
+
+    if (userIndex === -1) {
+      throw new window.UserValidationError('No account found with that ID or email.', 'idOrEmail');
+    }
+
+    const storedUser = allUsers[userIndex];
+    const attemptedAnswerHash = await hashPassword(validatedReset.securityAnswer, storedUser.securityAnswerSalt);
+    if (attemptedAnswerHash !== storedUser.securityAnswerHash) {
+      throw new window.UserValidationError('That answer does not match.', 'securityAnswer');
+    }
+
+    const newSalt = generateSalt();
+    storedUser.salt = newSalt;
+    storedUser.passwordHash = await hashPassword(validatedReset.newPassword, newSalt);
+
+    this._saveAllUsers(allUsers);
+    return true;
   }
 
   /**
@@ -213,6 +352,8 @@ class UserAccount {
 
     const studentSalt = generateSalt();
     const staffSalt = generateSalt();
+    const studentAnswerSalt = generateSalt();
+    const staffAnswerSalt = generateSalt();
 
     const demoStudent = {
       fullName: 'Alex Test',
@@ -221,7 +362,10 @@ class UserAccount {
       role: 'student',
       isAdmin: false,
       salt: studentSalt,
-      passwordHash: await hashPassword('demopass123', studentSalt)
+      passwordHash: await hashPassword('demopass123', studentSalt),
+      securityQuestion: window.SECURITY_QUESTIONS[0],
+      securityAnswerSalt: studentAnswerSalt,
+      securityAnswerHash: await hashPassword('rex', studentAnswerSalt) // documented demo answer
     };
 
     const demoStaff = {
@@ -231,7 +375,10 @@ class UserAccount {
       role: 'staff',
       isAdmin: true,
       salt: staffSalt,
-      passwordHash: await hashPassword('demopass123', staffSalt)
+      passwordHash: await hashPassword('demopass123', staffSalt),
+      securityQuestion: window.SECURITY_QUESTIONS[1],
+      securityAnswerSalt: staffAnswerSalt,
+      securityAnswerHash: await hashPassword('smith', staffAnswerSalt) // documented demo answer
     };
 
     this._saveAllUsers([demoStudent, demoStaff]);

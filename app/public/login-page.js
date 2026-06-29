@@ -1,4 +1,4 @@
-/* global Notyf, UserAccount, UserValidationError */
+/* global Notyf, UserAccount, UserValidationError, SECURITY_QUESTIONS */
 
 // ==========================================
 // LOGIN PAGE CONTROLLER
@@ -22,9 +22,20 @@ window.addEventListener('DOMContentLoaded', async () => {
   const loginForm = document.getElementById('login-form');
   const signupForm = document.getElementById('signup-form');
   const errorMessageEl = document.getElementById('auth-error-message');
+  const securityQuestionSelect = document.getElementById('signup-security-question');
+
+  // Populate the security question dropdown from the shared list
+  // in types.js, rather than hardcoding the options in HTML - this
+  // way the form and the validation logic can never drift apart.
+  window.SECURITY_QUESTIONS.forEach((question) => {
+    const option = document.createElement('option');
+    option.value = question;
+    option.textContent = question;
+    securityQuestionSelect.appendChild(option);
+  });
 
   const notyf = typeof Notyf !== 'undefined'
-    ? new Notyf({ duration: 2500, position: { x: 'right', y: 'top' }, ripple: false })
+    ? new Notyf({ duration: 2500, position: { x: 'right', y: 'bottom' }, ripple: false })
     : null;
 
   // ---- UI state helpers ----
@@ -127,9 +138,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     const idOrInitials = document.getElementById('signup-id').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
+    const securityQuestion = document.getElementById('signup-security-question').value;
+    const securityAnswer = document.getElementById('signup-security-answer').value;
 
     try {
-      await account.signUp({ fullName, idOrInitials, email, password });
+      await account.signUp({ fullName, idOrInitials, email, password, securityQuestion, securityAnswer });
       if (notyf) notyf.success('Account created! You can now log in.');
       signupForm.reset();
       switchTab('login');

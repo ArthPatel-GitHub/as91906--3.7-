@@ -234,16 +234,30 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const MIN_PASSWORD_LENGTH = 8;
 
+// A fixed list of standard security questions to choose from -
+// constraining to a list (rather than a free-text question) means
+// we can show the SAME question back at recovery time without
+// needing to separately store the chosen question text per user
+// beyond a simple reference.
+const SECURITY_QUESTIONS = [
+  "What was the name of your first pet?",
+  "What is your mother's maiden name?",
+  "What was the name of your primary school?",
+  "What is your favourite book?",
+  "What city were you born in?"
+];
+
 /**
- * Validates a raw signup submission (name, id, email, password)
- * and returns a clean, validated object ready to be turned into
- * a stored account by the UserAccount class.
+ * Validates a raw signup submission (name, id, email, password,
+ * security question + answer) and returns a clean, validated
+ * object ready to be turned into a stored account by the
+ * UserAccount class.
  *
  * Throws UserValidationError with a field-specific message if
  * anything is wrong, so the signup form can show the user exactly
  * what to fix.
  *
- * @param {object} rawData - { fullName, idOrInitials, email, password }
+ * @param {object} rawData - { fullName, idOrInitials, email, password, securityQuestion, securityAnswer }
  * @returns {object} a validated signup object
  */
 function createUserSignupRequest(rawData) {
@@ -251,7 +265,7 @@ function createUserSignupRequest(rawData) {
     throw new UserValidationError('Signup data is not a valid object.');
   }
 
-  const { fullName, idOrInitials, email, password } = rawData;
+  const { fullName, idOrInitials, email, password, securityQuestion, securityAnswer } = rawData;
 
   if (typeof fullName !== 'string' || fullName.trim().length === 0) {
     throw new UserValidationError('Full name is required.', 'fullName');
@@ -275,6 +289,20 @@ function createUserSignupRequest(rawData) {
     );
   }
 
+  if (typeof securityQuestion !== 'string' || !SECURITY_QUESTIONS.includes(securityQuestion)) {
+    throw new UserValidationError(
+      'Please choose one of the listed security questions.',
+      'securityQuestion'
+    );
+  }
+
+  if (typeof securityAnswer !== 'string' || securityAnswer.trim().length === 0) {
+    throw new UserValidationError(
+      'A security question answer is required, and cannot be recovered if forgotten.',
+      'securityAnswer'
+    );
+  }
+
   // Staff vs student is inferred the same way the ID itself is
   // validated: pure letters = staff initials, digits = student ID.
   const isStaffAccount = /^[A-Za-z]{3}$/.test(idOrInitials.trim());
@@ -284,6 +312,8 @@ function createUserSignupRequest(rawData) {
     idOrInitials: idOrInitials.trim(),
     email: email.trim().toLowerCase(),
     password, // not trimmed - a password's whitespace is meaningful
+    securityQuestion,
+    securityAnswer: securityAnswer.trim().toLowerCase(), // normalised so "Rex" and "rex" both work at recovery time
     role: isStaffAccount ? 'staff' : 'student'
   };
 }
@@ -317,6 +347,117 @@ function createLoginRequest(rawData) {
   };
 }
 
+/**
+ * Validates a request to change the logged-in user's email.
+ * @param {object} rawData - { newEmail }
+ * @returns {object} a validated change-email request
+ */
+function createChangeEmailRequest(rawData) {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new UserValidationError('Change email data is not a valid object.');
+  }
+
+  const { newEmail } = rawData;
+
+  if (typeof newEmail !== 'string' || !EMAIL_PATTERN.test(newEmail.trim())) {
+    throw new UserValidationError('Please enter a valid email address.', 'newEmail');
+  }
+
+  return { newEmail: newEmail.trim().toLowerCase() };
+}
+
+/**
+ * Validates a request to change the logged-in user's password.
+ * Checks the new password meets the minimum length and that the
+ * confirmation matches - it does NOT check the current password
+ * is correct, since that requires comparing against the stored
+ * hash, which is the UserAccount class's job, not a pure
+ * validation concern.
+ *
+ * @param {object} rawData - { currentPassword, newPassword, confirmNewPassword }
+ * @returns {object} a validated change-password request
+ */
+function createChangePasswordRequest(rawData) {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new UserValidationError('Change password data is not a valid object.');
+  }
+
+  const { currentPassword, newPassword, confirmNewPassword } = rawData;
+
+  if (typeof currentPassword !== 'string' || currentPassword.length === 0) {
+    throw new UserValidationError('Current password is required.', 'currentPassword');
+  }
+
+  if (typeof newPassword !== 'string' || newPassword.length < MIN_PASSWORD_LENGTH) {
+    throw new UserValidationError(
+      `New password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+      'newPassword'
+    );
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    throw new UserValidationError('New password and confirmation do not match.', 'confirmNewPassword');
+  }
+
+  if (newPassword === currentPassword) {
+    throw new UserValidationError('New password must be different from your current password.', 'newPassword');
+  }
+
+  return { currentPassword, newPassword };
+}
+
+/**
+ * Validates the first step of account recovery: identifying
+ * which account the user is trying to recover.
+ * @param {object} rawData - { idOrEmail }
+ */
+function createRecoveryLookupRequest(rawData) {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new UserValidationError('Recovery data is not a valid object.');
+  }
+
+  const { idOrEmail } = rawData;
+
+  if (typeof idOrEmail !== 'string' || idOrEmail.trim().length === 0) {
+    throw new UserValidationError('Student ID, Staff Initials, or email is required.', 'idOrEmail');
+  }
+
+  return { idOrEmail: idOrEmail.trim().toLowerCase() };
+}
+
+/**
+ * Validates the second step of account recovery: answering the
+ * security question and setting a new password.
+ * @param {object} rawData - { securityAnswer, newPassword, confirmNewPassword }
+ */
+function createRecoveryResetRequest(rawData) {
+  if (!rawData || typeof rawData !== 'object') {
+    throw new UserValidationError('Recovery reset data is not a valid object.');
+  }
+
+  const { securityAnswer, newPassword, confirmNewPassword } = rawData;
+
+  if (typeof securityAnswer !== 'string' || securityAnswer.trim().length === 0) {
+    throw new UserValidationError('An answer is required.', 'securityAnswer');
+  }
+
+  if (typeof newPassword !== 'string' || newPassword.length < MIN_PASSWORD_LENGTH) {
+    throw new UserValidationError(
+      `New password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+      'newPassword'
+    );
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    throw new UserValidationError('New password and confirmation do not match.', 'confirmNewPassword');
+  }
+
+  return {
+    securityAnswer: securityAnswer.trim().toLowerCase(),
+    newPassword
+  };
+}
+
 // Export everything the rest of the app needs.
 // (No module bundler in this project, so these attach to window
 // for App.js / player.js to use, the same way the rest of the
@@ -330,3 +471,8 @@ window.REPEAT_MODES = REPEAT_MODES;
 window.UserValidationError = UserValidationError;
 window.createUserSignupRequest = createUserSignupRequest;
 window.createLoginRequest = createLoginRequest;
+window.createChangeEmailRequest = createChangeEmailRequest;
+window.createChangePasswordRequest = createChangePasswordRequest;
+window.createRecoveryLookupRequest = createRecoveryLookupRequest;
+window.createRecoveryResetRequest = createRecoveryResetRequest;
+window.SECURITY_QUESTIONS = SECURITY_QUESTIONS;

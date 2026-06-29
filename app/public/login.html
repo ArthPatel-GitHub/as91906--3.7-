@@ -16,7 +16,6 @@
       <a href="player.html" class="nav-link">Player</a>
       <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link">Contact</a>
-      <a href="login.html" class="nav-link active">Login</a>
       <div id="auth-widget"></div>
     </nav>
 
@@ -65,8 +64,11 @@
         </div>
         <button type="submit" class="btn submit-btn">Log In</button>
         <p class="form-help-text" style="margin-top: 12px;">
-          Demo student: <strong>123456</strong> / <strong>demopass123</strong> &nbsp;|&nbsp;
-          Demo staff: <strong>JSM</strong> / <strong>demopass123</strong>
+          Demo student: <strong>123456</strong> / <strong>demopass123</strong> (security answer: <strong>rex</strong>) &nbsp;|&nbsp;
+          Demo staff: <strong>JSM</strong> / <strong>demopass123</strong> (security answer: <strong>smith</strong>)
+        </p>
+        <p class="form-help-text" style="margin-top: 10px;">
+          <a href="forgot-password.html" style="color: var(--brand-green);">Forgot your password?</a>
         </p>
       </form>
 
@@ -96,6 +98,22 @@
         <div class="form-group">
           <label for="signup-password" class="form-label">Password</label>
           <input type="password" id="signup-password" class="form-input" placeholder="At least 8 characters" required />
+        </div>
+        <div class="form-group">
+          <label for="signup-security-question" class="form-label">Security Question</label>
+          <select id="signup-security-question" class="form-input" required>
+            <option value="" disabled selected>Choose a question...</option>
+          </select>
+          <small class="form-help-text">
+            Used to reset your password if you forget it. Choose one you'll always remember the answer to.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="signup-security-answer" class="form-label">Answer</label>
+          <input type="text" id="signup-security-answer" class="form-input" placeholder="Your answer" required />
+          <small class="form-help-text" style="color: var(--accent-amber);">
+            ⚠️ This answer cannot be recovered if you forget it — write it down somewhere safe.
+          </small>
         </div>
         <button type="submit" class="btn submit-btn">Sign Up</button>
       </form>
