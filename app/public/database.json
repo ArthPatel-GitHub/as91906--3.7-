@@ -117,51 +117,6 @@
     "durationInSeconds": 243
   },
   {
-<<<<<<< HEAD
-    "id": "all-things-bright-and-beautiful",
-    "title": "All Things Bright and Beautiful",
-    "lyrics": "All things bright and beautiful,\nAll creatures great and small,\nAll things wise and wonderful,\nThe Lord God made them all.\n\nEach little flower that opens,\nEach little bird that sings,\nHe made their glowing colours,\nHe made their tiny wings.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A well-known children's hymn written by Cecil Frances Alexander in 1848, often used in junior assemblies.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "type": "hymn",
-    "durationInSeconds": 190
-  },
-  {
-    "id": "all-creatures-of-our-god-and-king",
-    "title": "All Creatures of Our God and King",
-    "lyrics": "All creatures of our God and King,\nLift up your voice and with us sing,\nAlleluia! Alleluia!\nThou burning sun with golden beam,\nThou silver moon with softer gleam,\nO praise Him! O praise Him!\nAlleluia! Alleluia! Alleluia!",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A traditional hymn adapted from the writings of St. Francis of Assisi, sung at major college thanksgiving services.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "type": "hymn",
-    "durationInSeconds": 205
-  },
-  {
-    "id": "onward-christian-soldiers",
-    "title": "Onward, Christian Soldiers",
-    "lyrics": "Onward, Christian soldiers, marching as to war,\nWith the cross of Jesus going on before.\nChrist, the royal Master, leads against the foe;\nForward into battle, see His banners go!",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A rousing Victorian-era hymn frequently chosen for processional entrances at formal college ceremonies.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    "type": "hymn",
-    "durationInSeconds": 175
-  },
-  {
-    "id": "house-spirit-anthem",
-    "title": "House Spirit Anthem",
-    "lyrics": "Stand together, shoulder to shoulder,\nColours flying high and bold.\nEvery voice a little louder,\nEvery story to be told.\n\nThis is our house, this is our pride,\nWe rise as one, side by side.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. An original composition created for inter-house competition days to rally student spirit.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-    "type": "anthem",
-    "durationInSeconds": 160
-  },
-  {
-    "id": "old-boys-reunion-song",
-    "title": "Old Boys' Reunion Song",
-    "lyrics": "Back to the halls where we first began,\nBack to the friendships, woman and man.\nYears may pass but the bond remains,\nEchoes of laughter, echoes of names.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A nostalgic piece performed each year at the alumni reunion dinner to honour past students.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-    "type": "anthem",
-    "durationInSeconds": 188
-=======
     "id": "tutira-mai",
     "title": "Tūtira Mai Ngā Iwi",
     "lyrics": "Tūtira mai ngā iwi, tātou tātou e\nTūtira mai ngā iwi, tātou tātou e.",
@@ -187,34 +142,10 @@
     "audioUrl": "/audio/te-aroha.mp3",
     "type": "hymn",
     "durationInSeconds": 90
->>>>>>> 307770633d6173e4fdd359dc7befeed4c4f1af42
   },
   {
     "id": "morning-has-broken",
     "title": "Morning Has Broken",
-<<<<<<< HEAD
-    "lyrics": "Morning has broken, like the first morning,\nBlackbird has spoken, like the first bird.\nPraise for the singing, praise for the morning,\nPraise for the springing fresh from the world.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A gentle hymn, popularised by Cat Stevens, often sung at sunrise chapel services.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-    "type": "hymn",
-    "durationInSeconds": 200
-  },
-  {
-    "id": "rugby-first-xv-anthem",
-    "title": "First XV Anthem",
-    "lyrics": "Forward together, the scrum holds firm,\nEvery tackle, every turn.\nGreen and red against the sky,\nWe fight as one, we will not lie down.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A high-energy chant composed for the First XV rugby team, sung from the sidelines at home matches.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-    "type": "anthem",
-    "durationInSeconds": 130
-  },
-  {
-    "id": "the-lord-is-my-shepherd",
-    "title": "The Lord's My Shepherd",
-    "lyrics": "The Lord's my Shepherd, I'll not want;\nHe makes me down to lie\nIn pastures green; He leadeth me\nThe quiet waters by.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A Scottish metrical psalm setting, traditionally included in remembrance and memorial services.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-=======
     "lyrics": "Morning has broken, like the first morning,\nBlackbird has spoken, like the first bird.",
     "history": "Gentle melodic hymn for mornings.",
     "audioUrl": "/audio/morning-has-broken.mp3",
@@ -236,18 +167,10 @@
     "lyrics": "Thine be the glory, risen, conquering Son,\nEndless is the victory.",
     "history": "Triumphant hymn for festivals.",
     "audioUrl": "/audio/thine-be-the-glory.mp3",
->>>>>>> 307770633d6173e4fdd359dc7befeed4c4f1af42
     "type": "hymn",
     "durationInSeconds": 215
   },
   {
-<<<<<<< HEAD
-    "id": "founders-day-hymn",
-    "title": "Founder's Day Hymn",
-    "lyrics": "We gather here in gratitude,\nFor those who built this place with care.\nTheir vision lives within these walls,\nTheir spirit moves within the air.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. Composed specifically for the annual Founder's Day service, honouring the school's establishment.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
-=======
     "id": "when-the-saints",
     "title": "When the Saints",
     "lyrics": "When the saints go marching in,\nWhen the saints go marching in,\nWhen the saints go marching in,\nAll glory, all glory.",
@@ -262,65 +185,10 @@
     "lyrics": "O come, all ye faithful, joyful and triumphant,\nO come ye, O come ye to Bethlehem.",
     "history": "Traditional seasonal hymn.",
     "audioUrl": "/audio/o-come-all-ye.mp3",
->>>>>>> 307770633d6173e4fdd359dc7befeed4c4f1af42
     "type": "hymn",
     "durationInSeconds": 220
   },
   {
-<<<<<<< HEAD
-    "id": "ode-to-joy",
-    "title": "Ode to Joy",
-    "lyrics": "Joyful, joyful, we adore Thee,\nGod of glory, Lord of love;\nHearts unfold like flowers before Thee,\nOpening to the sun above.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. Adapted from Beethoven's Ninth Symphony, used as a celebratory hymn at end-of-year prize giving.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
-    "type": "hymn",
-    "durationInSeconds": 230
-  },
-  {
-    "id": "graduation-farewell-song",
-    "title": "Graduation Farewell Song",
-    "lyrics": "As we step beyond these gates today,\nWe carry all you gave us on our way.\nThank you for the lessons and the light,\nWe leave as one, we leave tonight.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. Sung each year by graduating seniors at the leaving assembly, marking the end of their school journey.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "type": "anthem",
-    "durationInSeconds": 205
-  },
-  {
-    "id": "deck-the-halls",
-    "title": "Deck the Halls",
-    "lyrics": "Deck the halls with boughs of holly,\nFa la la la la, la la la la.\n'Tis the season to be jolly,\nFa la la la la, la la la la.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A traditional Welsh carol performed each year at the college's end-of-term Christmas service.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "type": "hymn",
-    "durationInSeconds": 145
-  },
-  {
-    "id": "rowing-eight-anthem",
-    "title": "First Eight Rowing Anthem",
-    "lyrics": "Pull together, blade through water,\nEvery stroke a step closer to home.\nEight as one upon the river,\nWe row on, we row alone no longer.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. Composed for the rowing squad, traditionally sung at the regatta send-off before major races.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    "type": "anthem",
-    "durationInSeconds": 155
-  },
-  {
-    "id": "now-thank-we-all-our-god",
-    "title": "Now Thank We All Our God",
-    "lyrics": "Now thank we all our God,\nWith hearts and hands and voices,\nWho wondrous things hath done,\nIn whom His world rejoices.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. A German Reformation-era hymn traditionally sung at the college's harvest and thanksgiving services.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-    "type": "hymn",
-    "durationInSeconds": 200
-  },
-  {
-    "id": "house-cup-victory-song",
-    "title": "House Cup Victory Song",
-    "lyrics": "Raise the cup up to the sky,\nWe worked together, you and I.\nEvery point and every try,\nNow we sing it, loud and high.",
-    "history": "PLACEHOLDER ENTRY \u2014 replace audioUrl with a real hosted file. Performed at the end-of-year House Cup ceremony to celebrate the winning house.",
-    "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-    "type": "anthem",
-    "durationInSeconds": 170
-=======
     "id": "silent-night",
     "title": "Silent Night",
     "lyrics": "Silent night, holy night, all is calm,\nAll is bright round yon virgin mother and child.",
@@ -346,6 +214,5 @@
     "audioUrl": "/audio/holding-out-for-a-hero.mp3",
     "type": "anthem",
     "durationInSeconds": 243
->>>>>>> 307770633d6173e4fdd359dc7befeed4c4f1af42
   }
 ]
