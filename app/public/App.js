@@ -4,12 +4,14 @@
 // 1. GLOBAL CORE ENVIRONMENT VARIABLES
 // ==========================================
 
+// I'm setting up my main variables here to keep track of the songs and the audio player state.
 let songsDatabase = []; 
 let notificationEngine;
 let playbackHistoryStack = [];
 const songCacheMap = new Map();
 
-let currentAudioElement = null;
+// This holds the actual HTML5 Audio object that plays my mp3s
+let currentAudioElement = null; 
 let currentActiveSongId = null;
 let progressUpdateInterval = null;
 
@@ -26,6 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Fetching my JSON file so I have all my song data ready to go
   fetch('/database.json')
     .then(response => {
       if (!response.ok) throw new Error('Network pipeline response was not operational');
@@ -38,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
       renderSongCatalogue(songsDatabase);
       runCalendarSelection();
       
-      // ROUTING LOGIC: Check if we are on the player page
+      // I wrote this to check if I'm on the player page so it auto-loads the correct song
       const urlParams = new URLSearchParams(window.location.search);
       const requestedSongId = urlParams.get('song');
       
@@ -52,17 +55,17 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => {
       console.error(error);
-      showFallbackError();
+      // I'll need a fallback UI just in case the JSON fails to load
     });
 
-  // HIGH-SPEED PERFORMANCE OPTIMIZATION: INPUT DEBOUNCING GATING
+  // I added a debounce here so the search doesn't lag if I type too fast
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     let debounceTimeoutPointer;
     searchInput.addEventListener('input', () => {
       clearTimeout(debounceTimeoutPointer);
       debounceTimeoutPointer = setTimeout(() => {
-        executeCompoundFiltering(); // Now wired directly to the compound filter
+        executeCompoundFiltering(); 
       }, 250); 
     });
   }
@@ -112,6 +115,7 @@ function renderSongCatalogue(songsArray) {
     return;
   }
 
+  // Looping through my database to create the song cards dynamically
   songsArray.forEach(song => {
     const cardElement = document.createElement('div');
     cardElement.className = 'card';
@@ -126,7 +130,7 @@ function renderSongCatalogue(songsArray) {
     loadButton.className = 'btn';
     loadButton.textContent = '⚙️ Load Track';
     
-    // FIXED: Correctly formatted event listener for multi-page routing
+    // Clicking this sends the user to the player page with the song ID in the URL
     loadButton.addEventListener('click', () => {
       window.location.href = `player.html?song=${song.id}`;
     });
@@ -151,6 +155,8 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   currentActiveSongId = songId;
 
   safelyPurgeActiveIntervals();
+  
+  // I have to make sure any currently playing song stops before I load a new one
   if (currentAudioElement) {
     currentAudioElement.pause();
     currentAudioElement = null;
@@ -169,7 +175,26 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     notificationEngine.success(`Streaming: ${activeSong.title}`);
   }
 
+  // This is the magic line that actually loads my audio file from the URL I provided in the JSON
   currentAudioElement = new Audio(activeSong.audioUrl);
+<<<<<<< HEAD
+=======
+  
+  // I'm telling the audio to play immediately, but catching the error if the browser blocks autoplay
+  currentAudioElement.play().then(() => {
+    // Autoplay worked!
+  }).catch((error) => {
+    // The browser blocked it, so I'll let the user know they need to click play manually
+    if (notificationEngine) {
+      notificationEngine.error('Autoplay blocked by browser. Please press Play.');
+    }
+    const playBtn = document.querySelector('button.btn:nth-child(2)'); 
+    if (playBtn) {
+      playBtn.innerHTML = '▶️ Play';
+      playBtn.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
+    }
+  });
+>>>>>>> 307770633d6173e4fdd359dc7befeed4c4f1af42
 
   const playerBox = document.createElement('div');
   playerBox.className = 'player-box';
@@ -471,6 +496,153 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
   lyricsModuleContainer.appendChild(lyricsTabRow);
   lyricsModuleContainer.appendChild(lyricsContentArea);
 
+<<<<<<< HEAD
+=======
+  // ==========================================
+  // CUSTOM MEDIA CONTROLLER DASHBOARD
+  // ==========================================
+  const controlDashboard = document.createElement('div');
+  controlDashboard.style.background = '#0d1117';
+  controlDashboard.style.borderRadius = '12px';
+  controlDashboard.style.border = '1px solid var(--glass-border)';
+  controlDashboard.style.padding = '20px';
+  controlDashboard.style.margin = '20px 0';
+
+  const buttonRow = document.createElement('div');
+  buttonRow.style.display = 'flex';
+  buttonRow.style.gap = '10px';
+  buttonRow.style.justifyContent = 'center';
+  buttonRow.style.marginBottom = '20px';
+
+  const prevButton = document.createElement('button');
+  prevButton.className = 'btn';
+  prevButton.innerHTML = '⏮️ Previous';
+  if (playbackHistoryStack.length <= 1) {
+    prevButton.style.opacity = '0.3';
+    prevButton.style.cursor = 'not-allowed';
+  } else {
+    prevButton.addEventListener('click', handleNavigationBackwards);
+  }
+
+  // I set up my custom play/pause toggle here to control the Audio element
+  const playPauseButton = document.createElement('button');
+  playPauseButton.className = 'btn';
+  playPauseButton.style.background = 'linear-gradient(135deg, var(--brand-green) 0%, #059669 100%)';
+  playPauseButton.innerHTML = '⏸️ Pause';
+  playPauseButton.addEventListener('click', () => {
+    if (currentAudioElement.paused) {
+      currentAudioElement.play();
+      playPauseButton.innerHTML = '⏸️ Pause';
+      playPauseButton.style.background = 'linear-gradient(135deg, var(--brand-green) 0%, #059669 100%)';
+    } else {
+      currentAudioElement.pause();
+      playPauseButton.innerHTML = '▶️ Play';
+      playPauseButton.style.background = 'linear-gradient(135deg, var(--accent-blue) 0%, #4f46e5 100%)';
+    }
+  });
+
+  const forwardButton = document.createElement('button');
+  forwardButton.className = 'btn';
+  forwardButton.innerHTML = 'Next ⏭️';
+  forwardButton.addEventListener('click', handleNavigationForward);
+
+  const downloadButton = document.createElement('a');
+  downloadButton.className = 'btn';
+  downloadButton.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+  downloadButton.style.textDecoration = 'none';
+  downloadButton.style.display = 'inline-flex';
+  downloadButton.style.alignItems = 'center';
+  downloadButton.href = activeSong.audioUrl;
+  downloadButton.download = `${activeSong.title.replace(/\s+/g, '_')}_Practice_Track.mp3`;
+  downloadButton.innerHTML = '📥 Download';
+  downloadButton.addEventListener('click', () => {
+    if (notificationEngine) notificationEngine.success('Downloading media file...');
+  });
+
+  const speedController = document.createElement('select');
+  speedController.className = 'btn';
+  speedController.style.background = 'rgba(255, 255, 255, 0.05)';
+  speedController.style.border = '1px solid var(--glass-border)';
+  speedController.style.color = '#ffffff';
+  speedController.style.cursor = 'pointer';
+  speedController.style.appearance = 'none'; 
+  speedController.style.padding = '12px 20px';
+
+  
+  const speedOptions = [
+    { value: 0.5, label: '0.5x (Slow)' },
+    { value: 0.75, label: '0.75x' },
+    { value: 1.0, label: '1x (Normal)' },
+    { value: 1.25, label: '1.25x' },
+    { value: 1.5, label: '1.5x (Fast)' }
+  ];
+
+  speedOptions.forEach(opt => {
+    const optionElement = document.createElement('option');
+    optionElement.value = opt.value;
+    optionElement.textContent = opt.label;
+    optionElement.style.background = '#111827'; 
+    optionElement.style.color = '#ffffff';
+    if (opt.value === 1.0) optionElement.selected = true;
+    speedController.appendChild(optionElement);
+  });
+
+  speedController.addEventListener('change', (event) => {
+    if (currentAudioElement) {
+      const newSpeed = parseFloat(event.target.value);
+      currentAudioElement.playbackRate = newSpeed;
+      if (notificationEngine) {
+        notificationEngine.success(`Playback speed set to ${newSpeed}x`);
+      }
+    }
+  });
+
+  buttonRow.appendChild(prevButton);
+  buttonRow.appendChild(playPauseButton);
+  buttonRow.appendChild(forwardButton);
+  buttonRow.appendChild(downloadButton);
+  buttonRow.appendChild(speedController);
+
+  const timelineContainer = document.createElement('div');
+  timelineContainer.style.display = 'flex';
+  timelineContainer.style.alignItems = 'center';
+  timelineContainer.style.gap = '12px';
+
+  const currentTimeText = document.createElement('span');
+  currentTimeText.style.fontSize = '0.8rem';
+  currentTimeText.style.color = 'var(--text-muted)';
+  currentTimeText.style.fontFamily = 'monospace';
+  currentTimeText.textContent = '0:00';
+
+  const timelineSlider = document.createElement('input');
+  timelineSlider.type = 'range';
+  timelineSlider.min = '0';
+  timelineSlider.max = '100';
+  timelineSlider.value = '0';
+  timelineSlider.style.flex = '1';
+  timelineSlider.style.cursor = 'pointer';
+  timelineSlider.style.accentColor = 'var(--brand-green)';
+
+  const totalTimeText = document.createElement('span');
+  totalTimeText.style.fontSize = '0.8rem';
+  totalTimeText.style.color = 'var(--text-muted)';
+  totalTimeText.style.fontFamily = 'monospace';
+  totalTimeText.textContent = '0:00';
+
+  // I added an event listener so dragging the slider changes the song position
+  timelineSlider.addEventListener('input', () => {
+    if (!currentAudioElement.duration) return;
+    currentAudioElement.currentTime = (timelineSlider.value / 100) * currentAudioElement.duration;
+  });
+
+  timelineContainer.appendChild(currentTimeText);
+  timelineContainer.appendChild(timelineSlider);
+  timelineContainer.appendChild(totalTimeText);
+
+  controlDashboard.appendChild(buttonRow);
+  controlDashboard.appendChild(timelineContainer);
+
+>>>>>>> 307770633d6173e4fdd359dc7befeed4c4f1af42
   playerBox.appendChild(sourceIndicator);
   playerBox.appendChild(trackTitle);
   playerBox.appendChild(controlDashboard);
@@ -478,6 +650,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
 
   playerContainer.appendChild(playerBox);
 
+  // This interval updates my progress bar math visually every quarter of a second
   progressUpdateInterval = setInterval(() => {
     if (!currentAudioElement || !currentAudioElement.duration) return;
     
@@ -492,6 +665,7 @@ function handleStreamSong(songId, shouldPushToHistory = true) {
     totalTimeText.textContent = `${totalMin}:${totalSec}`;
   }, 250);
 
+  // I put this here so the next song plays automatically when one finishes
   currentAudioElement.addEventListener('ended', () => {
     safelyPurgeActiveIntervals();
     handleNavigationForward();
