@@ -69,6 +69,16 @@ window.addEventListener('DOMContentLoaded', () => {
       }, 250); 
     });
   }
+
+  // If login/logout happens via the nav auth-widget while this
+  // page is open, reload so the favourite hearts and the "My
+  // Favourites" filter button correctly reflect the new state -
+  // same pattern used on contact.html and login.html.
+  if (document.getElementById('songs-container')) {
+    window.addEventListener('auth-state-changed', () => {
+      window.location.reload();
+    });
+  }
 });
 
 // ==========================================
@@ -105,6 +115,13 @@ function renderSongCatalogue(songsArray) {
     return;
   }
 
+  // Logged-in state is checked once per render, not per card -
+  // cheaper than asking on every single card, and the catalogue
+  // re-renders on every filter/search change anyway, which keeps
+  // this in sync naturally.
+  const account = new UserAccount();
+  const loggedIn = account.isLoggedIn();
+
   // Looping through my database to create the song cards dynamically
   songsArray.forEach(song => {
     const cardElement = document.createElement('div');
@@ -116,9 +133,43 @@ function renderSongCatalogue(songsArray) {
     const cardP = document.createElement('p');
     cardP.textContent = song.history;
 
+    // Favourite heart button - only rendered when logged in, since
+    // there's nowhere to store a favourite for a guest.
+    if (loggedIn) {
+      const favouriteButton = document.createElement('button');
+      favouriteButton.className = 'favourite-btn';
+      const isFav = account.isFavourited(song.id);
+      favouriteButton.classList.toggle('is-favourited', isFav);
+      favouriteButton.innerHTML = isFav ? '♥' : '♡';
+      favouriteButton.setAttribute('aria-label', isFav ? 'Remove from favourites' : 'Add to favourites');
+      favouriteButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        try {
+          const nowFavourited = account.toggleFavourite(song.id);
+          favouriteButton.classList.toggle('is-favourited', nowFavourited);
+          favouriteButton.innerHTML = nowFavourited ? '♥' : '♡';
+          favouriteButton.setAttribute('aria-label', nowFavourited ? 'Remove from favourites' : 'Add to favourites');
+          if (notificationEngine) {
+            notificationEngine.success(nowFavourited ? `Added "${song.title}" to favourites` : `Removed "${song.title}" from favourites`);
+          }
+          // If the "My Favourites" filter is currently active and
+          // a song just got un-favourited, it should disappear
+          // from the visible list immediately rather than waiting
+          // for the next unrelated re-render.
+          if (activeFavouritesFilter && !nowFavourited) {
+            executeCompoundFiltering();
+          }
+        } catch (error) {
+          if (notificationEngine) notificationEngine.error('Could not update favourites.');
+          console.error(error);
+        }
+      });
+      cardElement.appendChild(favouriteButton);
+    }
+
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
-    loadButton.textContent = '⚙️ Play';
+    loadButton.textContent = '⚙️ Load Track';
     
     // Clicking this sends the user to the player page with the song ID in the URL
     loadButton.addEventListener('click', () => {
@@ -558,6 +609,7 @@ function safelyPurgeActiveIntervals() {
 
 let activeTypeFilter = 'all'; 
 let activeLengthFilter = 'all'; 
+let activeFavouritesFilter = false; // true = "My Favourites" filter is on
 
 const filterBindings = [
   { id: 'filter-all-type', type: 'type', value: 'all' },
@@ -583,9 +635,30 @@ filterBindings.forEach(binding => {
   }
 });
 
+// The "My Favourites" filter is a standalone toggle, not part of
+// a mutually-exclusive group like type/length, so it gets its own
+// handler rather than being folded into filterBindings.
+const favouritesFilterBtn = document.getElementById('filter-favourites');
+if (favouritesFilterBtn) {
+  // Hidden entirely when logged out - there's no favourites list
+  // to filter by for a guest, so showing a disabled or empty
+  // filter would just be confusing rather than helpful.
+  const filterAccount = new UserAccount();
+  if (!filterAccount.isLoggedIn()) {
+    favouritesFilterBtn.style.display = 'none';
+  }
+
+  favouritesFilterBtn.addEventListener('click', () => {
+    activeFavouritesFilter = !activeFavouritesFilter;
+    favouritesFilterBtn.classList.toggle('active', activeFavouritesFilter);
+    executeCompoundFiltering();
+  });
+}
+
 function executeCompoundFiltering() {
   const searchInput = document.getElementById('search-input');
   const searchString = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const account = new UserAccount();
   
   const filteredSongs = songsDatabase.filter(song => {
     const matchesText = song.title.toLowerCase().includes(searchString) || 
@@ -597,8 +670,10 @@ function executeCompoundFiltering() {
     let matchesLength = true;
     if (activeLengthFilter === 'short') matchesLength = (song.durationInSeconds < 180);
     if (activeLengthFilter === 'long') matchesLength = (song.durationInSeconds >= 180);
+
+    const matchesFavourites = !activeFavouritesFilter || account.isFavourited(song.id);
     
-    return matchesText && matchesType && matchesLength;
+    return matchesText && matchesType && matchesLength && matchesFavourites;
   });
 
   if (filteredSongs.length === 0 && notificationEngine) {

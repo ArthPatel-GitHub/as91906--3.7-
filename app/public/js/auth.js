@@ -299,6 +299,82 @@ class UserAccount {
     return true;
   }
 
+  // ---- Favourites ----
+
+  /**
+   * Toggles whether a song is in the logged-in user's favourites
+   * list. Adds it if absent, removes it if present.
+   * @param {string} songId
+   * @returns {boolean} true if the song is now favourited, false if it was just removed
+   */
+  toggleFavourite(songId) {
+    if (!this.isLoggedIn()) {
+      throw new window.UserValidationError('You must be logged in to save favourites.');
+    }
+    if (typeof songId !== 'string' || songId.length === 0) {
+      throw new window.UserValidationError('A valid song id is required.');
+    }
+
+    const allUsers = this._loadAllUsers();
+    const currentUser = this.getCurrentUser();
+    const userIndex = allUsers.findIndex((user) => user.idOrInitials === currentUser.idOrInitials);
+    if (userIndex === -1) {
+      throw new window.UserValidationError('Your account could not be found.');
+    }
+
+    // Older accounts (created before this feature existed) won't
+    // have a favourites array yet - default to an empty one
+    // rather than crashing on undefined.
+    if (!Array.isArray(allUsers[userIndex].favourites)) {
+      allUsers[userIndex].favourites = [];
+    }
+
+    const favourites = allUsers[userIndex].favourites;
+    const existingIndex = favourites.indexOf(songId);
+    let nowFavourited;
+
+    if (existingIndex === -1) {
+      favourites.push(songId);
+      nowFavourited = true;
+    } else {
+      favourites.splice(existingIndex, 1);
+      nowFavourited = false;
+    }
+
+    this._saveAllUsers(allUsers);
+
+    // Keep the active session's copy in sync too, since
+    // getFavourites()/isFavourited() read from getCurrentUser(),
+    // not directly from allUsers.
+    const updatedPublicUser = this._toPublicUser(allUsers[userIndex]);
+    this._saveSession(updatedPublicUser);
+
+    return nowFavourited;
+  }
+
+  /**
+   * Returns the logged-in user's list of favourited song ids.
+   * Returns an empty array if logged out, rather than throwing -
+   * this is a read-only convenience method that UI code can call
+   * freely without needing to check login state first every time.
+   * @returns {Array<string>}
+   */
+  getFavourites() {
+    const user = this.getCurrentUser();
+    if (!user) return [];
+    return Array.isArray(user.favourites) ? user.favourites : [];
+  }
+
+  /**
+   * Convenience check for whether a specific song is favourited
+   * by the logged-in user.
+   * @param {string} songId
+   * @returns {boolean}
+   */
+  isFavourited(songId) {
+    return this.getFavourites().includes(songId);
+  }
+
   /**
    * Always reads the session fresh from localStorage rather than
    * a cached instance field. This matters because a page can have
@@ -335,7 +411,10 @@ class UserAccount {
       idOrInitials: user.idOrInitials,
       email: user.email,
       role: user.role,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      // Defaults to an empty array for accounts created before
+      // this field existed, rather than leaking `undefined`.
+      favourites: Array.isArray(user.favourites) ? user.favourites : []
     };
   }
 
