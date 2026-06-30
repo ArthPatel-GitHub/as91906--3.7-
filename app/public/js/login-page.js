@@ -87,6 +87,22 @@ window.addEventListener('DOMContentLoaded', async () => {
     showFormsState();
   }
 
+  // ---- Reset demo data (destructive, so requires confirmation) ----
+  const resetDataBtn = document.getElementById('reset-data-btn');
+  resetDataBtn.addEventListener('click', async () => {
+    const confirmed = window.confirm(
+      'This will permanently delete every account stored in this browser and re-create the two demo accounts. Continue?'
+    );
+    if (!confirmed) return;
+
+    await account.resetAllData();
+    if (notyf) notyf.success('Demo data reset.');
+    showFormsState();
+    loginForm.reset();
+    signupForm.reset();
+    window.dispatchEvent(new CustomEvent('auth-state-changed'));
+  });
+
   // ---- Logout ----
   logoutBtn.addEventListener('click', () => {
     account.logOut();

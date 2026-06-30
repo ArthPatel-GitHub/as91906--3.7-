@@ -383,6 +383,26 @@ class UserAccount {
 
     this._saveAllUsers([demoStudent, demoStaff]);
   }
+
+  /**
+   * Wipes ALL stored accounts and the active session, then
+   * re-seeds the two fictional demo accounts fresh. This is the
+   * one deliberate, explicit way to clear out any accounts that
+   * were created under an older data shape (e.g. signed up before
+   * the security question feature existed, and so are missing
+   * those fields) - rather than trying to patch old records, this
+   * guarantees every account going forward matches the current
+   * shape exactly.
+   *
+   * Intentionally destructive and intentionally manual - this
+   * should only ever be triggered by an explicit user action (a
+   * confirmed button click), never automatically.
+   */
+  async resetAllData() {
+    localStorage.removeItem(STORAGE_KEY_USERS);
+    this._clearSession();
+    await this.seedDemoAccountsIfEmpty();
+  }
 }
 
 window.UserAccount = UserAccount;

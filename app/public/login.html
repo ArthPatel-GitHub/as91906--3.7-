@@ -27,13 +27,20 @@
     </header>
 
     <!-- Scope notice: this is a local browser-only demo, not a real shared account system -->
-    <div class="notice-box" style="margin-bottom: 25px;">
+    <div class="notice-box" style="margin-bottom: 15px;">
       <p style="margin: 0;">
         🔒 <strong>Demo Notice:</strong> Accounts on this page are stored only in your own browser
         for demonstration purposes — there is no shared school server. Try the seeded demo accounts below,
         or sign up with your own placeholder details.
       </p>
     </div>
+
+    <p style="margin-bottom: 25px;">
+      <button type="button" id="reset-data-btn" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); font-size: 0.75rem; padding: 8px 14px;">
+        🗑️ Reset Demo Data
+      </button>
+      <span class="form-help-text" style="margin-left: 8px;">Wipes all accounts in this browser and re-seeds the demo accounts. Useful while testing.</span>
+    </p>
 
     <!-- Logged-in state: shown instead of the forms once a user is signed in -->
     <div id="logged-in-panel" class="widget" style="display: none;">
@@ -129,11 +136,11 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-  <script src="/types.js"></script>
-  <script src="/player.js"></script>
-  <script src="/auth.js"></script>
-  <script src="/App.js"></script>
-  <script src="/login-page.js"></script>
-  <script src="/auth-widget.js"></script>
+  <script src="/js/types.js"></script>
+  <script src="/js/player.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/App.js"></script>
+  <script src="/js/login-page.js"></script>
+  <script src="/js/auth-widget.js"></script>
 </body>
 </html>
