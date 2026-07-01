@@ -28,6 +28,14 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Show a welcome toast if login-page.js left us a message
+  // (only happens on the redirect from a successful login).
+  const welcomeMessage = sessionStorage.getItem('welcome_message');
+  if (welcomeMessage && notificationEngine) {
+    notificationEngine.success(welcomeMessage);
+    sessionStorage.removeItem('welcome_message');
+  }
+
   // Fetching my JSON file so I have all my song data ready to go
   fetch('/database.json')
     .then(response => {
@@ -169,7 +177,7 @@ function renderSongCatalogue(songsArray) {
 
     const loadButton = document.createElement('button');
     loadButton.className = 'btn';
-    loadButton.textContent = '⚙️ Load Track';
+    loadButton.textContent = '⚙️ Play';
     
     // Clicking this sends the user to the player page with the song ID in the URL
     loadButton.addEventListener('click', () => {
@@ -635,24 +643,33 @@ filterBindings.forEach(binding => {
   }
 });
 
-// The "My Favourites" filter is a standalone toggle, not part of
-// a mutually-exclusive group like type/length, so it gets its own
-// handler rather than being folded into filterBindings.
-const favouritesFilterBtn = document.getElementById('filter-favourites');
-if (favouritesFilterBtn) {
-  // Hidden entirely when logged out - there's no favourites list
-  // to filter by for a guest, so showing a disabled or empty
-  // filter would just be confusing rather than helpful.
-  const filterAccount = new UserAccount();
-  if (!filterAccount.isLoggedIn()) {
-    favouritesFilterBtn.style.display = 'none';
+// Render the favourites filter group based on login state.
+// Logged in: show the "♥ My Favourites" toggle button.
+// Logged out: show a polite prompt to log in instead of a
+// dead label with nothing next to it.
+const favouritesFilterGroup = document.getElementById('favourites-filter-group');
+if (favouritesFilterGroup) {
+  const favAccount = new UserAccount();
+  if (favAccount.isLoggedIn()) {
+    favouritesFilterGroup.innerHTML = `
+      <span class="filter-label">SAVED:</span>
+      <button class="btn filter-btn" id="filter-favourites">♥ My Favourites</button>
+    `;
+    const favouritesFilterBtn = document.getElementById('filter-favourites');
+    favouritesFilterBtn.addEventListener('click', () => {
+      activeFavouritesFilter = !activeFavouritesFilter;
+      favouritesFilterBtn.classList.toggle('active', activeFavouritesFilter);
+      executeCompoundFiltering();
+    });
+  } else {
+    favouritesFilterGroup.innerHTML = `
+      <span class="filter-label" style="width: auto;">
+        <a href="login.html" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-decoration: none;">
+          ♡ <span style="text-decoration: underline; text-underline-offset: 3px;">Sign in</span> to save and filter favourites
+        </a>
+      </span>
+    `;
   }
-
-  favouritesFilterBtn.addEventListener('click', () => {
-    activeFavouritesFilter = !activeFavouritesFilter;
-    favouritesFilterBtn.classList.toggle('active', activeFavouritesFilter);
-    executeCompoundFiltering();
-  });
 }
 
 function executeCompoundFiltering() {

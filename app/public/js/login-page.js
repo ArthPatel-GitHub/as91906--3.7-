@@ -132,9 +132,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const user = await account.logIn({ idOrEmail, password });
-      if (notyf) notyf.success(`Welcome back, ${user.fullName}!`);
-      showLoggedInState();
+      // Store the welcome message for index.html to pick up after
+      // the redirect, since the toast won't reliably render on a
+      // page that's about to unload.
+      sessionStorage.setItem('welcome_message', `Welcome back, ${user.fullName}!`);
       window.dispatchEvent(new CustomEvent('auth-state-changed'));
+      window.location.href = 'index.html';
     } catch (error) {
       if (error instanceof UserValidationError) {
         showError(error.message);

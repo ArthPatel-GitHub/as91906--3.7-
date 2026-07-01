@@ -47,6 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
         <div class="auth-widget-dropdown hidden" id="auth-widget-dropdown">
           <p class="auth-widget-dropdown-name">${user.fullName}</p>
           <p class="auth-widget-dropdown-meta">${user.idOrInitials} &middot; ${user.role}${user.isAdmin ? ' (admin)' : ''}</p>
+          <a href="account.html" class="btn auth-widget-settings">⚙️ Account Settings</a>
           <button type="button" class="btn auth-widget-signout" id="auth-widget-signout">Sign Out</button>
         </div>
       </div>

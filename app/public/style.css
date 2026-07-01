@@ -952,15 +952,17 @@ body {
 
 .auth-widget-dropdown {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
-  min-width: 220px;
+  min-width: 190px;
+  width: 190px;
   background: #111827;
   border: 1px solid var(--glass-border);
-  border-radius: 14px;
-  padding: 18px;
+  border-radius: 12px;
+  padding: 14px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
   z-index: 999;
+  box-sizing: border-box;
 }
 
 .auth-widget-dropdown.hidden {
@@ -968,24 +970,45 @@ body {
 }
 
 .auth-widget-dropdown-name {
-  margin: 0 0 4px 0;
+  margin: 0 0 3px 0;
   color: #ffffff;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 
 .auth-widget-dropdown-meta {
-  margin: 0 0 14px 0;
+  margin: 0 0 10px 0;
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.auth-widget-settings {
+  width: 100%;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  text-decoration: none;
+  margin-bottom: 6px;
+  display: inline-flex;
+  font-size: 0.75rem;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.auth-widget-settings:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .auth-widget-signout {
   width: 100%;
   justify-content: center;
   background: linear-gradient(135deg, var(--brand-red) 0%, #b91c1c 100%);
+  font-size: 0.75rem;
+  padding: 8px 12px;
+  box-sizing: border-box;
 }
 
 /* Stack the nav vertically on small screens so the auth widget
@@ -1089,39 +1112,4 @@ body {
   border-top: 1px solid var(--glass-border);
   padding-top: 10px;
   margin-top: 10px;
-}
-
-/* ==========================================
-   12. NOTYF TOAST SIZE OVERRIDE
-   ========================================== */
-/* Notyf's default toast is sized for a generic site; shrinking
-   the wrapper padding, message line-height, and icon size here
-   so it reads as a compact pill rather than a full alert banner. */
-.notyf__toast {
-  max-width: 240px;
-  border-radius: 8px;
-}
-
-.notyf__wrapper {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  padding-left: 4px;
-}
-
-.notyf__message {
-  font-size: 0.8rem;
-  line-height: 1.3em;
-}
-
-.notyf__icon {
-  width: 16px;
-  font-size: 1em;
-  margin-right: 8px;
-}
-
-.notyf__icon--success,
-.notyf__icon--error {
-  height: 16px;
-  width: 16px;
 }

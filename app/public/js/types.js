@@ -233,6 +233,60 @@ const ID_PATTERN = /^(\d{6,8}|[A-Za-z]{3})$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 32;
+const MAX_FULL_NAME_LENGTH = 60;
+const MAX_ID_LENGTH = 8; // already implied by ID_PATTERN (6-8 digits or 3 letters), stated explicitly here for clarity
+const MAX_EMAIL_LENGTH = 100;
+const MAX_SECURITY_ANSWER_LENGTH = 50;
+
+// Password must contain at least one of each: uppercase letter,
+// lowercase letter, digit, and a "special" (non-alphanumeric)
+// character. Checked as four separate regexes rather than one
+// dense pattern, so a failure can point at exactly which
+// requirement is missing instead of a vague "invalid password".
+const PASSWORD_HAS_UPPERCASE = /[A-Z]/;
+const PASSWORD_HAS_LOWERCASE = /[a-z]/;
+const PASSWORD_HAS_NUMBER = /[0-9]/;
+const PASSWORD_HAS_SPECIAL_CHAR = /[^A-Za-z0-9]/;
+
+/**
+ * Checks a password meets the length and complexity rules. Used
+ * by both signup and password-change/reset flows, so the rule is
+ * defined once and applied everywhere consistently.
+ *
+ * Throws UserValidationError with a specific message naming
+ * exactly which requirement failed, rather than one generic
+ * "weak password" message.
+ *
+ * @param {string} password
+ * @param {string} fieldName - used in the thrown error's `field` property
+ */
+function validatePasswordComplexity(password, fieldName) {
+  if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH) {
+    throw new UserValidationError(
+      `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+      fieldName
+    );
+  }
+  if (password.length > MAX_PASSWORD_LENGTH) {
+    throw new UserValidationError(
+      `Password must be no more than ${MAX_PASSWORD_LENGTH} characters long.`,
+      fieldName
+    );
+  }
+  if (!PASSWORD_HAS_UPPERCASE.test(password)) {
+    throw new UserValidationError('Password must include at least one uppercase letter.', fieldName);
+  }
+  if (!PASSWORD_HAS_LOWERCASE.test(password)) {
+    throw new UserValidationError('Password must include at least one lowercase letter.', fieldName);
+  }
+  if (!PASSWORD_HAS_NUMBER.test(password)) {
+    throw new UserValidationError('Password must include at least one number.', fieldName);
+  }
+  if (!PASSWORD_HAS_SPECIAL_CHAR.test(password)) {
+    throw new UserValidationError('Password must include at least one special character (e.g. ! @ # $ %).', fieldName);
+  }
+}
 
 // A fixed list of standard security questions to choose from -
 // constraining to a list (rather than a free-text question) means
@@ -270,6 +324,9 @@ function createUserSignupRequest(rawData) {
   if (typeof fullName !== 'string' || fullName.trim().length === 0) {
     throw new UserValidationError('Full name is required.', 'fullName');
   }
+  if (fullName.trim().length > MAX_FULL_NAME_LENGTH) {
+    throw new UserValidationError(`Full name must be ${MAX_FULL_NAME_LENGTH} characters or fewer.`, 'fullName');
+  }
 
   if (typeof idOrInitials !== 'string' || !ID_PATTERN.test(idOrInitials.trim())) {
     throw new UserValidationError(
@@ -277,17 +334,23 @@ function createUserSignupRequest(rawData) {
       'idOrInitials'
     );
   }
+  // ID_PATTERN already enforces 6-8 digits or exactly 3 letters,
+  // so MAX_ID_LENGTH can never actually be exceeded by a string
+  // that passes the pattern above - this check exists anyway as
+  // an explicit, defensive guard rather than relying solely on
+  // the regex never changing in a way that breaks that guarantee.
+  if (idOrInitials.trim().length > MAX_ID_LENGTH) {
+    throw new UserValidationError(`ID must be ${MAX_ID_LENGTH} characters or fewer.`, 'idOrInitials');
+  }
 
   if (typeof email !== 'string' || !EMAIL_PATTERN.test(email.trim())) {
     throw new UserValidationError('Please enter a valid email address.', 'email');
   }
-
-  if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH) {
-    throw new UserValidationError(
-      `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
-      'password'
-    );
+  if (email.trim().length > MAX_EMAIL_LENGTH) {
+    throw new UserValidationError(`Email must be ${MAX_EMAIL_LENGTH} characters or fewer.`, 'email');
   }
+
+  validatePasswordComplexity(password, 'password');
 
   if (typeof securityQuestion !== 'string' || !SECURITY_QUESTIONS.includes(securityQuestion)) {
     throw new UserValidationError(
@@ -301,6 +364,9 @@ function createUserSignupRequest(rawData) {
       'A security question answer is required, and cannot be recovered if forgotten.',
       'securityAnswer'
     );
+  }
+  if (securityAnswer.trim().length > MAX_SECURITY_ANSWER_LENGTH) {
+    throw new UserValidationError(`Answer must be ${MAX_SECURITY_ANSWER_LENGTH} characters or fewer.`, 'securityAnswer');
   }
 
   // Staff vs student is inferred the same way the ID itself is
@@ -362,6 +428,9 @@ function createChangeEmailRequest(rawData) {
   if (typeof newEmail !== 'string' || !EMAIL_PATTERN.test(newEmail.trim())) {
     throw new UserValidationError('Please enter a valid email address.', 'newEmail');
   }
+  if (newEmail.trim().length > MAX_EMAIL_LENGTH) {
+    throw new UserValidationError(`Email must be ${MAX_EMAIL_LENGTH} characters or fewer.`, 'newEmail');
+  }
 
   return { newEmail: newEmail.trim().toLowerCase() };
 }
@@ -388,12 +457,7 @@ function createChangePasswordRequest(rawData) {
     throw new UserValidationError('Current password is required.', 'currentPassword');
   }
 
-  if (typeof newPassword !== 'string' || newPassword.length < MIN_PASSWORD_LENGTH) {
-    throw new UserValidationError(
-      `New password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
-      'newPassword'
-    );
-  }
+  validatePasswordComplexity(newPassword, 'newPassword');
 
   if (newPassword !== confirmNewPassword) {
     throw new UserValidationError('New password and confirmation do not match.', 'confirmNewPassword');
@@ -440,13 +504,11 @@ function createRecoveryResetRequest(rawData) {
   if (typeof securityAnswer !== 'string' || securityAnswer.trim().length === 0) {
     throw new UserValidationError('An answer is required.', 'securityAnswer');
   }
-
-  if (typeof newPassword !== 'string' || newPassword.length < MIN_PASSWORD_LENGTH) {
-    throw new UserValidationError(
-      `New password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
-      'newPassword'
-    );
+  if (securityAnswer.trim().length > MAX_SECURITY_ANSWER_LENGTH) {
+    throw new UserValidationError(`Answer must be ${MAX_SECURITY_ANSWER_LENGTH} characters or fewer.`, 'securityAnswer');
   }
+
+  validatePasswordComplexity(newPassword, 'newPassword');
 
   if (newPassword !== confirmNewPassword) {
     throw new UserValidationError('New password and confirmation do not match.', 'confirmNewPassword');
@@ -476,3 +538,10 @@ window.createChangePasswordRequest = createChangePasswordRequest;
 window.createRecoveryLookupRequest = createRecoveryLookupRequest;
 window.createRecoveryResetRequest = createRecoveryResetRequest;
 window.SECURITY_QUESTIONS = SECURITY_QUESTIONS;
+window.validatePasswordComplexity = validatePasswordComplexity;
+window.MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH;
+window.MAX_FULL_NAME_LENGTH = MAX_FULL_NAME_LENGTH;
+window.MAX_ID_LENGTH = MAX_ID_LENGTH;
+window.MAX_EMAIL_LENGTH = MAX_EMAIL_LENGTH;
+window.MAX_SECURITY_ANSWER_LENGTH = MAX_SECURITY_ANSWER_LENGTH;
+window.MAX_SEARCH_LENGTH = 50; // search bar isn't part of signup/login, but shares the same "bounded input" principle

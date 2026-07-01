@@ -25,7 +25,7 @@
         <p>Browse and filter the complete collection</p>
       </div>
       <div class="search-bar-wrapper">
-        <input type="text" id="search-input" placeholder="Search titles or contexts..." autocomplete="off" />
+        <input type="text" id="search-input" placeholder="Search titles or contexts..." maxlength="50" autocomplete="off" />
       </div>
     </header>
 
@@ -42,9 +42,8 @@
         <button class="btn filter-btn" id="filter-short">Short (< 3m)</button>
         <button class="btn filter-btn" id="filter-long">Long (3m+)</button>
       </div>
-      <div class="filter-group filter-favourites-group">
-        <span class="filter-label">SAVED:</span>
-        <button class="btn filter-btn" id="filter-favourites">♥ My Favourites</button>
+      <div class="filter-group filter-favourites-group" id="favourites-filter-group">
+        <!-- Populated by App.js based on login state -->
       </div>
     </div>
 

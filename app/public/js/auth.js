@@ -441,7 +441,7 @@ class UserAccount {
       role: 'student',
       isAdmin: false,
       salt: studentSalt,
-      passwordHash: await hashPassword('demopass123', studentSalt),
+      passwordHash: await hashPassword('Demo123!', studentSalt),
       securityQuestion: window.SECURITY_QUESTIONS[0],
       securityAnswerSalt: studentAnswerSalt,
       securityAnswerHash: await hashPassword('rex', studentAnswerSalt) // documented demo answer
@@ -454,7 +454,7 @@ class UserAccount {
       role: 'staff',
       isAdmin: true,
       salt: staffSalt,
-      passwordHash: await hashPassword('demopass123', staffSalt),
+      passwordHash: await hashPassword('Demo123!', staffSalt),
       securityQuestion: window.SECURITY_QUESTIONS[1],
       securityAnswerSalt: staffAnswerSalt,
       securityAnswerHash: await hashPassword('smith', staffAnswerSalt) // documented demo answer

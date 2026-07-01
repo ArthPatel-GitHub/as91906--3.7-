@@ -80,4 +80,18 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('auth-state-changed', () => {
     window.location.reload();
   });
+
+  // Live character counter for the message box, which has a
+  // 250-char maxlength on the <textarea> itself - this just gives
+  // a visible readout so the limit isn't a silent surprise.
+  const messageTextarea = document.getElementById('request-message');
+  const charCountEl = document.getElementById('message-char-count');
+  if (messageTextarea && charCountEl) {
+    const maxLength = messageTextarea.getAttribute('maxlength') || 250;
+    const updateCount = () => {
+      charCountEl.textContent = `${messageTextarea.value.length} / ${maxLength} characters`;
+    };
+    messageTextarea.addEventListener('input', updateCount);
+    updateCount(); // set the initial 0 / 250 state
+  }
 });

@@ -63,16 +63,16 @@
       <form id="login-form" class="request-form">
         <div class="form-group">
           <label for="login-id-email" class="form-label">Student ID, Staff Initials, or Email</label>
-          <input type="text" id="login-id-email" class="form-input" placeholder="e.g. 123456 or JSM" required />
+          <input type="text" id="login-id-email" class="form-input" placeholder="e.g. 123456 or JSM" maxlength="100" required />
         </div>
         <div class="form-group">
           <label for="login-password" class="form-label">Password</label>
-          <input type="password" id="login-password" class="form-input" placeholder="Your password" required />
+          <input type="password" id="login-password" class="form-input" placeholder="Your password" maxlength="32" required />
         </div>
         <button type="submit" class="btn submit-btn">Log In</button>
         <p class="form-help-text" style="margin-top: 12px;">
-          Demo student: <strong>123456</strong> / <strong>demopass123</strong> (security answer: <strong>rex</strong>) &nbsp;|&nbsp;
-          Demo staff: <strong>JSM</strong> / <strong>demopass123</strong> (security answer: <strong>smith</strong>)
+          Demo student: <strong>123456</strong> / <strong>Demo123!</strong> (security answer: <strong>rex</strong>) &nbsp;|&nbsp;
+          Demo staff: <strong>JSM</strong> / <strong>Demo123!</strong> (security answer: <strong>smith</strong>)
         </p>
         <p class="form-help-text" style="margin-top: 10px;">
           <a href="forgot-password.html" style="color: var(--brand-green);">Forgot your password?</a>
@@ -83,7 +83,7 @@
       <form id="signup-form" class="request-form" style="display: none;">
         <div class="form-group">
           <label for="signup-name" class="form-label">Full Name</label>
-          <input type="text" id="signup-name" class="form-input" placeholder="e.g. John Smith" required />
+          <input type="text" id="signup-name" class="form-input" placeholder="e.g. John Smith" maxlength="60" required />
         </div>
         <div class="form-group">
           <label for="signup-id" class="form-label">Identification</label>
@@ -92,6 +92,7 @@
             id="signup-id"
             class="form-input"
             placeholder="Student ID (6-8 digits) or Staff Initials (3 letters)"
+            maxlength="8"
             required
           />
           <small class="form-help-text">
@@ -100,11 +101,14 @@
         </div>
         <div class="form-group">
           <label for="signup-email" class="form-label">Email</label>
-          <input type="email" id="signup-email" class="form-input" placeholder="you@example.com" required />
+          <input type="email" id="signup-email" class="form-input" placeholder="you@example.com" maxlength="100" required />
         </div>
         <div class="form-group">
           <label for="signup-password" class="form-label">Password</label>
-          <input type="password" id="signup-password" class="form-input" placeholder="At least 8 characters" required />
+          <input type="password" id="signup-password" class="form-input" placeholder="8-32 characters" maxlength="32" required />
+          <small class="form-help-text">
+            Must include an uppercase letter, a lowercase letter, a number, and a special character (e.g. ! @ # $).
+          </small>
         </div>
         <div class="form-group">
           <label for="signup-security-question" class="form-label">Security Question</label>
@@ -117,7 +121,7 @@
         </div>
         <div class="form-group">
           <label for="signup-security-answer" class="form-label">Answer</label>
-          <input type="text" id="signup-security-answer" class="form-input" placeholder="Your answer" required />
+          <input type="text" id="signup-security-answer" class="form-input" placeholder="Your answer" maxlength="50" required />
           <small class="form-help-text" style="color: var(--accent-amber);">
             ⚠️ This answer cannot be recovered if you forget it — write it down somewhere safe.
           </small>
